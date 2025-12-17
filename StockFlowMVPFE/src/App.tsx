@@ -5,6 +5,7 @@ import {
   Routes,
   Route,
   Navigate,
+  Link,
 } from 'react-router-dom'
 import { AuthProvider, useAuth } from './auth/AuthContext'
 import { LoginPage } from './pages/LoginPage'
@@ -45,24 +46,24 @@ function AppShell() {
               StockFlow
             </span>
             <nav className="flex gap-4 text-sm">
-              <a
-                href="/dashboard"
+              <Link
+                to="/dashboard"
                 className="rounded-full px-3 py-1.5 text-slate-300 hover:bg-slate-700/22 hover:no-underline"
               >
                 Dashboard
-              </a>
-              <a
-                href="/products"
+              </Link>
+              <Link
+                to="/products"
                 className="rounded-full px-3 py-1.5 text-slate-300 hover:bg-slate-700/22 hover:no-underline"
               >
                 Products
-              </a>
-              <a
-                href="/settings"
+              </Link>
+              <Link
+                to="/settings"
                 className="rounded-full px-3 py-1.5 text-slate-300 hover:bg-slate-700/22 hover:no-underline"
               >
                 Settings
-              </a>
+              </Link>
             </nav>
           </div>
           <div className="flex items-center gap-3">
