@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["nodejs_20"]
+
+[phases.build]
+cmds = [
+  "cd StockFlowMVPBE && npm install",
+  "cd StockFlowMVPBE && npm run build"
+]
+
+[start]
+cmd = "cd StockFlowMVPBE && npm start"
