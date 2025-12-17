@@ -8,6 +8,9 @@ import { sendSuccess, sendError } from "../utils/response.util.js";
 export const getSettingsController = async (req: Request, res: Response) => {
   try {
     const organizationId = (req as any).userId as number;
+    if (!organizationId) {
+      return sendError(res, 401, "User not authenticated");
+    }
     const settings = await getOrCreateSettingsForOrg(organizationId);
     return sendSuccess(
       res,
@@ -17,7 +20,8 @@ export const getSettingsController = async (req: Request, res: Response) => {
     );
   } catch (error) {
     console.error("getSettingsController error", error);
-    return sendError(res, 500, "Internal server error", error);
+    const errorMessage = error instanceof Error ? error.message : "Internal server error";
+    return sendError(res, 500, errorMessage, null);
   }
 };
 
@@ -29,8 +33,16 @@ export const updateSettingsController = async (
     const organizationId = (req as any).userId as number;
     const { defaultLowStockThreshold } = req.body;
 
+    if (defaultLowStockThreshold === undefined) {
+      return sendError(
+        res,
+        400,
+        "defaultLowStockThreshold is required",
+      );
+    }
+
     const value =
-      defaultLowStockThreshold === null || defaultLowStockThreshold === undefined
+      defaultLowStockThreshold === null
         ? null
         : Number(defaultLowStockThreshold);
 
@@ -51,7 +63,8 @@ export const updateSettingsController = async (
     );
   } catch (error) {
     console.error("updateSettingsController error", error);
-    return sendError(res, 500, "Internal server error", error);
+    const errorMessage = error instanceof Error ? error.message : "Internal server error";
+    return sendError(res, 500, errorMessage, null);
   }
 };
 

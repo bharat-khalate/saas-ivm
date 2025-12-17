@@ -35,7 +35,7 @@ model Product {
 
   costPrice         Decimal? @map("cost_price") @db.Decimal(12, 2)
   sellingPrice      Decimal? @map("selling_price") @db.Decimal(12, 2)
-  lowStockThreshold Int?     @map("low_stock_threshold")
+  lowStockThreshold Int?     @map("low_stock_threshold") 
   createdAt         DateTime @default(now()) @map("created_at")
   updatedAt         DateTime @updatedAt @map("updated_at")
 
