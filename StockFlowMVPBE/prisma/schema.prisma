@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+  url=env("DATABASE_URL")
+}
+
+model User {
+  userId           Int       @id @default(autoincrement()) @map("user_id")
+  email            String    @unique
+  password         String
+  organisationName String    @map("organisation_name")
+  products         Product[]
+  settings         Settings?
+}
+
+model Product {
+  productId      String  @id @default(uuid()) @map("product_id")
+  user           User    @relation(fields: [organizationId], references: [userId])
+  organizationId Int     @map("organization_id")
+  name           String
+  sku            String
+  description    String?
+  quantityOnHand Int     @default(0) @map("quantity_on_hand")
+
+  costPrice         Decimal? @map("cost_price") @db.Decimal(12, 2)
+  sellingPrice      Decimal? @map("selling_price") @db.Decimal(12, 2)
+  lowStockThreshold Int?     @map("low_stock_threshold")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@unique([organizationId, sku])
+  @@index([organizationId])
+}
+
+model Settings {
+  settingsId               Int  @id @default(autoincrement()) @map("settings_id")
+  organizationId           Int  @unique @map("organization_id")
+  defaultLowStockThreshold Int? @map("default_low_stock_threshold")
+
+  organization User @relation(fields: [organizationId], references: [userId])
+}

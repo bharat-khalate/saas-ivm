@@ -1,0 +1,59 @@
+# =========================
+# Node / JS / TS (Global)
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# Environment files
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Build outputs
+# =========================
+dist/
+build/
+out/
+coverage/
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+
+# =========================
+# OS / Editor
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# =========================
+# Prisma (BE)
+# =========================
+be/generated/
+be/prisma/migrations/
+
+# =========================
+# Frontend (FE)
+# =========================
+fe/.next/
+fe/.turbo/
+fe/.cache/
+fe/.vercel/
+fe/.vite/
+fe/dist/
+
+# =========================
+# Docker
+# =========================
+.pgdata/
+docker-data/
