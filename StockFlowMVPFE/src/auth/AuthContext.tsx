@@ -3,8 +3,8 @@ import {
   useContext,
   useEffect,
   useState,
-  ReactNode,
 } from 'react'
+import type { ReactNode } from 'react'
 import { clearAuth, loadAuth, saveAuth } from '../api/types'
 import type { AppUser } from '../api/types'
 import { authService } from '../services/authService'

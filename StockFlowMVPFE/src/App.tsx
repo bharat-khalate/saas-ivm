@@ -1,4 +1,5 @@
 import './App.css'
+import type { ReactElement } from 'react'
 import {
   BrowserRouter,
   Routes,
@@ -14,7 +15,7 @@ import { ProductFormPage } from './pages/ProductFormPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { ToastContainer, Loading, Button } from './components'
 
-function PrivateRoute({ children }: { children: JSX.Element }) {
+function PrivateRoute({ children }: { children: ReactElement }) {
   const { user, loading } = useAuth()
 
   if (loading) {
