@@ -16,7 +16,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
-const port = Number(process.env.PORT_NUMBER) || 5000;
+const port = Number(process.env.PORT) || 5000;
 
 app.get("/", (req: Request, res: Response) => {
   res.json({
