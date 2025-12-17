@@ -1,7 +1,10 @@
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "dev-secret";
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "1h";
+const JWT_SECRET: jwt.Secret = process.env.JWT_SECRET || "dev-secret";
+// jsonwebtoken v9 types restrict expiresIn to a typed duration (StringValue) or number.
+// Env vars are plain string, so we cast to the allowed type with a safe default.
+const JWT_EXPIRES_IN: jwt.SignOptions["expiresIn"] =
+  (process.env.JWT_EXPIRES_IN as jwt.SignOptions["expiresIn"]) || "1h";
 
 export interface JwtPayload {
   userId: number;
