@@ -156,7 +156,11 @@ export const updateProductController = async (req: Request, res: Response) => {
       costPrice,
       sellingPrice,
       lowStockThreshold,
-      fileUrl
+      fileUrl,
+      isActive,
+      isFeatured,
+      selectedSizes,
+      categoryName,
     } = req.body;
 
 
@@ -169,7 +173,11 @@ export const updateProductController = async (req: Request, res: Response) => {
       costPrice,
       sellingPrice,
       lowStockThreshold,
-      fileUrl
+      fileUrl,
+      isActive,
+      isFeatured,
+      selectedSizes,
+      categoryName,
     });
 
     return sendSuccess(

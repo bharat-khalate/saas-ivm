@@ -24,8 +24,8 @@ const Pagination = ({ meta, onPageChange }: Props) => {
 
 
     return (
-        <div className="grid grid-flow-col grid-rows-2 ">
-            <div className="flex justify-end items-center space-x-2 ">
+        <div className="grid grid-flow-col grid-rows-2">
+            <div className="flex justify-end items-center space-x-2">
 
 
                 <ResponsivePagination
@@ -36,12 +36,12 @@ const Pagination = ({ meta, onPageChange }: Props) => {
                     nextLabel=">"
                     maxWidth={DEFAULT_PAGINATION_TAB_SIZE}
                     className="pagination flex gap-1 items-center"
-                    pageItemClassName="border rounded overflow-hidden"
-                    pageLinkClassName="w-10 h-10 flex justify-center items-center bg-slate-900 text-gray-400 hover:bg-gray-50"
+                    pageItemClassName="border border-slate-300 dark:border-slate-700 rounded overflow-hidden"
+                    pageLinkClassName="w-10 h-10 flex justify-center items-center bg-white text-slate-700 hover:bg-slate-50 dark:bg-slate-900 dark:text-gray-300 dark:hover:bg-slate-800"
                 />
 
             </div>
-            <div className="flex justify-end  me-3 mt-1 space-x-2  text-gray-400 ">
+            <div className="flex justify-end me-3 mt-1 space-x-2 text-slate-500 dark:text-gray-400">
                 Showing {meta.pageSize * (meta.page - 1) + 1}-{Math.min(meta.page * meta.pageSize, meta.total)} of {meta.total} records
             </div>
         </div>

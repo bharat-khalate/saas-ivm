@@ -12,6 +12,7 @@ export interface JwtPayload {
 }
 
 export const signJwt = (payload: JwtPayload) => {
+  console.log("expiration:", JWT_EXPIRES_IN);
   return jwt.sign(payload, JWT_SECRET, {
     expiresIn: JWT_EXPIRES_IN,
   });
@@ -20,6 +21,14 @@ export const signJwt = (payload: JwtPayload) => {
 export const verifyJwt = (token: string): JwtPayload | null => {
   try {
     return jwt.verify(token, JWT_SECRET) as JwtPayload;
+  } catch {
+    return null;
+  }
+};
+
+export const verifyJwtIgnoreExpiration = (token: string): JwtPayload | null => {
+  try {
+    return jwt.verify(token, JWT_SECRET, { ignoreExpiration: true }) as JwtPayload;
   } catch {
     return null;
   }

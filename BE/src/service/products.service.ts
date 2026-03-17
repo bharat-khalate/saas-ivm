@@ -29,12 +29,12 @@ export interface UpdateProductInput {
   fileUrl?: string;
   isActive?: boolean;
   isFeatured?: boolean;
-  categoryId?: number;
+  categoryName?: string;
   selectedSizes?: string[];
 }
 
 export const createProduct = async (data: CreateProductInput) => {
-  const product = await prisma.product.create({
+  const product = await prisma.product.create({ 
     data: {
       organizationId: data.organizationId,
       name: data.name,

@@ -6,7 +6,7 @@ import {
   listUsers,
   deleteUserById,
 } from "../service/user.service.js";
-import { signJwt } from "../utils/jwt.util.js";
+import { signJwt, verifyJwtIgnoreExpiration } from "../utils/jwt.util.js";
 import { hashPassword, comparePassword } from "../utils/password.util.js";
 import { sendSuccess, sendError } from "../utils/response.util.js";
 const toSafeUser = (user: any) => {
@@ -77,6 +77,27 @@ export const loginUserController = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("loginUserController error", error);
+    return sendError(res, 500, "Internal server error", error);
+  }
+};
+
+export const refreshTokenController = async (req: Request, res: Response) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return sendError(res, 401, "Authorization header missing");
+    }
+
+    const token = authHeader.split(" ")[1];
+    const payload = verifyJwtIgnoreExpiration(token);
+    if (!payload) {
+      return sendError(res, 401, "Invalid token");
+    }
+
+    const newToken = signJwt({ userId: payload.userId, email: payload.email });
+    return sendSuccess(res, 200, "Token refreshed", { token: newToken });
+  } catch (error) {
+    console.error("refreshTokenController error", error);
     return sendError(res, 500, "Internal server error", error);
   }
 };

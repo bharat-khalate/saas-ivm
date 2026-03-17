@@ -5,6 +5,7 @@ export { ConfirmDialog } from './ConfirmDialog'
 export { FormField } from './FormField'
 export { Loading } from './Loading'
 export { showToast, ToastContainer } from './Toast'
+export { DataTable } from './DataTable'
 export {
   Table,
   TableHeader,

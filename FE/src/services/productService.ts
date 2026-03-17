@@ -5,7 +5,7 @@ import type { PaginationMeta } from '../config/pagination.config'
 
 
 export type Product = {
-  id?: number
+  productId?: number
   organizationId?: number
   name: string
   sku: string
@@ -14,6 +14,14 @@ export type Product = {
   costPrice?: number
   sellingPrice?: number
   lowStockThreshold?: number | null
+  categoryId?: number
+  categoryName?: string
+  selectedSizes?: string[]
+  isActive?: boolean
+  isFeatured?: boolean
+  fileUrl?: string
+  createdAt?: string
+  updatedAt?: string
 }
 
 export type ProductResponse = {
@@ -61,6 +69,10 @@ export const productService = {
 
   async listProductsBySkuOrName(pageData: Omit<PaginationMeta, "total" | "totalPages">, searchValue: string): Promise<ProductResponse> {
     const organisationId = getOrganizationId()
+    console.log({
+      ...pageData,
+      searchValue
+    })
     const response = await api.get<ApiResponse<ProductResponse>>(
       `/products/search/${organisationId}`,
       {
@@ -79,7 +91,16 @@ export const productService = {
   },
 
   async createProduct(
-    product: Omit<Product, 'id' | 'organizationId'>,
+    product: Omit<
+      Product,
+      | 'productId'
+      | 'organizationId'
+      | 'fileUrl'
+      | 'createdAt'
+      | 'updatedAt'
+
+    >,
+    file?: File | null,
   ): Promise<Product> {
     const organisationId = getOrganizationId()
 
@@ -88,28 +109,113 @@ export const productService = {
       throw new Error(`Invalid organization ID: ${organisationId}`)
     }
 
-    const payload = {
-      ...product,
-      organizationId: Number(organisationId),
+    const formData = new FormData()
+
+    formData.append('organizationId', String(organisationId))
+    formData.append('name', product.name)
+    formData.append('sku', product.sku)
+
+    if (product.description !== undefined) {
+      formData.append('description', product.description)
+    }
+    if (product.quantityOnHand !== undefined) {
+      formData.append('quantityOnHand', String(product.quantityOnHand))
+    }
+    if (product.costPrice !== undefined) {
+      formData.append('costPrice', String(product.costPrice))
+    }
+    if (product.sellingPrice !== undefined) {
+      formData.append('sellingPrice', String(product.sellingPrice))
+    }
+    if (product.lowStockThreshold !== undefined && product.lowStockThreshold !== null) {
+      formData.append('lowStockThreshold', String(product.lowStockThreshold))
+    }
+    if (product.categoryName !== undefined) {
+      formData.append('categoryName', String(product.categoryName))
+    }
+    if (product.selectedSizes && product.selectedSizes.length > 0) {
+      product.selectedSizes.forEach((size) => {
+        formData.append('selectedSizes', size)
+      })
+    }
+    if (product.isActive !== undefined) {
+      formData.append('isActive', String(product.isActive))
+    }
+    if (product.isFeatured !== undefined) {
+      formData.append('isFeatured', String(product.isFeatured))
     }
 
-    const response = await api.post<ApiResponse<Product>>('/products', payload)
+    if (file) {
+      formData.append('file', file)
+    }
+    const response = await api.post<ApiResponse<Product>>('/products', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
     return response.data.data
 
   },
 
   async updateProduct(
     id: number | string,
-    product: Partial<Omit<Product, 'id' | 'organizationId'>>,
+    product: Partial<Product>,
+    file?: File | null,
   ): Promise<Product> {
     const organisationId = getOrganizationId()
-    const payload = {
-      ...product,
-      organizationId: Number(organisationId),
+
+    const formData = new FormData()
+
+    formData.append('organizationId', String(organisationId))
+
+    if (product.name !== undefined) {
+      formData.append('name', product.name)
     }
+    if (product.sku !== undefined) {
+      formData.append('sku', product.sku)
+    }
+    if (product.description !== undefined) {
+      formData.append('description', product.description)
+    }
+    if (product.quantityOnHand !== undefined) {
+      formData.append('quantityOnHand', String(product.quantityOnHand))
+    }
+    if (product.costPrice !== undefined) {
+      formData.append('costPrice', String(product.costPrice))
+    }
+    if (product.sellingPrice !== undefined) {
+      formData.append('sellingPrice', String(product.sellingPrice))
+    }
+    if (product.lowStockThreshold !== undefined && product.lowStockThreshold !== null) {
+      formData.append('lowStockThreshold', String(product.lowStockThreshold))
+    }
+    if (product.categoryName !== undefined) {
+      formData.append('categoryName', String(product.categoryName))
+    }
+    if (product.selectedSizes && product.selectedSizes.length > 0) {
+      product.selectedSizes.forEach((size) => {
+        formData.append('selectedSizes', size)
+      })
+    }
+    if (product.isActive !== undefined) {
+      formData.append('isActive', String(product.isActive))
+    }
+    if (product.isFeatured !== undefined) {
+      formData.append('isFeatured', String(product.isFeatured))
+    }
+
+    if (file) {
+      formData.append('file', file)
+    }
+
     const response = await api.patch<ApiResponse<Product>>(
       `/products/${id}`,
-      payload,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
     )
     return response.data.data
   },
