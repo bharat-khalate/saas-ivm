@@ -1,18 +1,12 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  provider   = "prisma-client-js"
+  output     = "../generated/prisma"
   engineType = "library"
 }
 
 datasource db {
   provider = "postgresql"
-  url=env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -25,28 +19,37 @@ model User {
 }
 
 model Product {
-  productId      String  @id @default(uuid()) @map("product_id")
+  productId      Int     @id @default(autoincrement()) @map("product_id")
   user           User    @relation(fields: [organizationId], references: [userId])
   organizationId Int     @map("organization_id")
   name           String
   sku            String
   description    String?
   quantityOnHand Int     @default(0) @map("quantity_on_hand")
-
   costPrice         Decimal? @map("cost_price") @db.Decimal(12, 2)
   sellingPrice      Decimal? @map("selling_price") @db.Decimal(12, 2)
-  lowStockThreshold Int?     @map("low_stock_threshold") 
-  createdAt         DateTime @default(now()) @map("created_at")
-  updatedAt         DateTime @updatedAt @map("updated_at")
-
+  lowStockThreshold Int?     @map("low_stock_threshold")
+  isActive   Boolean  @default(true)@map("is_active")
+  isFeatured Boolean  @default(false)@map("is_featured")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  category      Category @relation(fields: [categoryName], references: [category])
+  categoryName  String   @map("category_name")@default("electronic")
+  fileUrl       String   @default("\\dummyfile") @map("file_url")
+  selectedSizes Json     @default("[]")@map("selected_sizes")
   @@unique([organizationId, sku])
   @@index([organizationId])
+}
+
+model Category {
+  categoryId Int       @id @default(autoincrement()) @map("category_id")
+  category   String    @unique
+  product    Product[]
 }
 
 model Settings {
   settingsId               Int  @id @default(autoincrement()) @map("settings_id")
   organizationId           Int  @unique @map("organization_id")
   defaultLowStockThreshold Int? @map("default_low_stock_threshold")
-
   organization User @relation(fields: [organizationId], references: [userId])
 }

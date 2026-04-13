@@ -15,12 +15,12 @@ export function Button({
 
   const variantClasses = {
     primary:
-      'bg-gradient-to-r from-sky-400 to-indigo-500 text-slate-900 hover:brightness-105',
+      'bg-gradient-to-r from-sky-500 to-indigo-600 text-white shadow-sm hover:brightness-105',
     secondary:
-      'border border-slate-600/70 bg-slate-900/95 text-slate-300 hover:bg-slate-800/95',
-    link: 'bg-transparent border-none p-0 text-sky-400',
+      'border border-slate-300 bg-white text-slate-800 hover:bg-slate-50 dark:border-slate-600/70 dark:bg-slate-900/95 dark:text-slate-300 dark:hover:bg-slate-800/95',
+    link: 'bg-transparent border-none p-0 text-sky-600 dark:text-sky-400',
     danger:
-      'bg-transparent border-none p-0 text-red-300',
+      'bg-transparent border-none p-0 text-red-600 dark:text-red-300',
   }
 
   return (

@@ -1,6 +1,7 @@
 import api from '../api/axios'
 import type { ApiResponse, AppUser } from '../api/types'
 
+
 export type LoginCredentials = {
   email: string
   password: string
@@ -23,7 +24,8 @@ export const authService = {
       '/users/login',
       credentials,
     )
-    return response.data.data
+    return response.data.data;
+    
   },
 
   async signup(data: SignupData): Promise<AuthResponse> {

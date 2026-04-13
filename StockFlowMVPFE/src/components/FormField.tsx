@@ -17,7 +17,7 @@ export function FormField({
     <label
       className={`flex flex-col gap-1.5 text-sm ${fullWidth ? 'col-span-full' : ''} ${className}`}
     >
-      <span className="text-slate-300">{label}</span>
+      <span className="text-slate-700 dark:text-slate-300">{label}</span>
       {children}
     </label>
   )

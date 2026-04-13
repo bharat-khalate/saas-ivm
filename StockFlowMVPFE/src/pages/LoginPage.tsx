@@ -1,28 +1,56 @@
 import { type FormEvent, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../auth/AuthContext'
+import { useAppDispatch } from '../store/hooks'
+import { loginThunk } from '../store/authSlice'
 import { Card, Button, FormField, Alert } from '../components'
+import { TEXT } from '../constants/text'
+import PageTitle from '../components/PageTitle'
 
 export function LoginPage() {
-  const { login } = useAuth()
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({})
+
+  const inputClassName =
+    'rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-900 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/40 dark:border-slate-600/50 dark:bg-slate-900/80 dark:text-slate-200 dark:focus:border-sky-400 dark:focus:ring-sky-400/60'
+
+  const validateEmail = (value: string) => {
+    if (!value.trim()) return TEXT.authPages.login.validation.emailRequired
+    // simple email check
+    if (!/^\S+@\S+\.\S+$/.test(value)) return TEXT.authPages.login.validation.emailValid
+    return ''
+  }
+
+  const validatePassword = (value: string) => {
+    if (!value) return TEXT.authPages.login.validation.passwordRequired
+    if (value.length < 6) return TEXT.authPages.login.validation.passwordLen
+    return ''
+  }
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setError(null)
+
+    const nextErrors = {
+      email: validateEmail(email),
+      password: validatePassword(password),
+    }
+    setFieldErrors(nextErrors)
+    if (nextErrors.email || nextErrors.password) return
+
     setLoading(true)
     try {
-      await login(email, password)
-      navigate('/dashboard')
+      await dispatch(loginThunk({ email, password })).unwrap()
+      navigate('/products')
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message ?? 'Login failed')
+        setError(err.message ?? TEXT.authPages.login.failed)
       } else {
-        setError('Login failed')
+        setError(TEXT.authPages.login.failed)
       }
     } finally {
       setLoading(false)
@@ -30,91 +58,111 @@ export function LoginPage() {
   }
 
   return (
-    <div className="grid min-h-screen grid-cols-[1.6fr_3.4fr] bg-gradient-to-b from-sky-500/25 via-transparent to-indigo-500/25 max-md:grid-cols-1">
-      <div className="flex min-h-screen items-center justify-center pl-12 max-md:hidden">
-        <div className="w-full max-w-[420px]">
-          <Card>
-            <h2 className="mb-4 mt-0 text-2xl font-semibold">Welcome back</h2>
-            <p className="mb-5 text-sm text-gray-400">
-              Sign in to view your inventory, update stock levels, and keep an
-              eye on low-stock items.
-            </p>
-            {error && (
-              <Alert type="error" className="mb-3">
-                {error}
-              </Alert>
-            )}
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              <FormField label="Email">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="rounded-xl border border-slate-600/50 bg-slate-900/80 px-3 py-2.5 text-slate-200 focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-sky-400/60"
-                />
-              </FormField>
-              <FormField label="Password">
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="rounded-xl border border-slate-600/50 bg-slate-900/80 px-3 py-2.5 text-slate-200 focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-sky-400/60"
-                />
-              </FormField>
-              <Button className="mt-1" type="submit" disabled={loading}>
-                {loading ? 'Signing in...' : 'Sign in'}
-              </Button>
-            </form>
-            <p className="mt-4 text-sm text-gray-400">
-              New here?{' '}
-              <Link to="/signup" className="text-sky-400">
-                Create an account
-              </Link>
-            </p>
-          </Card>
-        </div>
-      </div>
-      <div className="relative flex items-center justify-start overflow-hidden px-14 py-12 max-md:hidden">
-        <div className="relative z-10 max-w-[520px]">
-          <p className="mb-3 text-xs uppercase tracking-widest text-sky-300">
-            StockFlow
-          </p>
-          <h1 className="mb-3 text-4xl font-bold leading-tight">
-            Inventory that stays out of your way.
-          </h1>
-          <p className="mb-5 max-w-[30rem] text-[0.96rem] text-slate-300">
-            A focused dashboard for tiny teams and solo founders. Track what you
-            have, what&apos;s low, and what needs attention—without wrestling a
-            full-blown ERP.
-          </p>
-          <ul className="mb-6 flex flex-col gap-1.5 text-sm text-slate-200">
-            <li className="flex items-start">
-              <span className="mr-2 text-sky-400">•</span>
-              <span>Instant view of total products and stock on hand</span>
-            </li>
-            <li className="flex items-start">
-              <span className="mr-2 text-sky-400">•</span>
-              <span>One-click edits for quantities and prices</span>
-            </li>
-            <li className="flex items-start">
-              <span className="mr-2 text-sky-400">•</span>
-              <span>Low-stock list so you never miss a refill</span>
-            </li>
-          </ul>
-          <div className="flex flex-wrap gap-2">
-            <span className="rounded-full border border-sky-400/60 bg-sky-400/15 px-3 py-1 text-xs">
-              Built for internal demos & MVPs
-            </span>
-            <span className="rounded-full border border-slate-600/50 bg-slate-900/85 px-3 py-1 text-xs text-slate-200">
-              No credit card · No setup wizard
-            </span>
+    <>
+      <PageTitle
+        title={TEXT.authPages.pageTitle}
+        subTitle={TEXT.authPages.login.pageTitle}
+      />
+      <div className="grid min-h-screen md:grid-cols-[1.6fr_3.4fr] gap-4 max-md:gap-0 grid-cols-1">
+
+        <div className="flex min-h-screen items-center justify-center pl-12 max-md:px-6 max-md:py-6  ">
+          <div className="w-full ">
+            <Card>
+              <h2 className="mb-4 mt-0 text-2xl font-semibold text-slate-900 dark:text-slate-100">
+                {TEXT.authPages.login.title}
+              </h2>
+              <p className="mb-5 text-sm text-slate-600 dark:text-gray-400">
+                {TEXT.authPages.login.subtitle}
+              </p>
+              {error && (
+                <Alert type="error" className="mb-3">
+                  {error}
+                </Alert>
+              )}
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <FormField label={TEXT.authPages.login.fields.email}>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => {
+                      const v = e.target.value
+                      setEmail(v)
+                      setFieldErrors((prev) => ({ ...prev, email: validateEmail(v) }))
+                    }}
+                    required
+                    className={inputClassName}
+                  />
+                  {fieldErrors.email && (
+                    <p className="text-red-600 dark:text-red-400 text-sm">{fieldErrors.email}</p>
+                  )}
+                </FormField>
+                <FormField label={TEXT.authPages.login.fields.password}>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => {
+                      const v = e.target.value
+                      setPassword(v)
+                      setFieldErrors((prev) => ({ ...prev, password: validatePassword(v) }))
+                    }}
+                    required
+                    className={inputClassName}
+                  />
+                  {fieldErrors.password && (
+                    <p className="text-red-600 dark:text-red-400 text-sm">{fieldErrors.password}</p>
+                  )}
+                </FormField>
+                <Button className="mt-1" type="submit" disabled={loading}>
+                  {loading ? TEXT.authPages.login.submitting : TEXT.authPages.login.submit}
+                </Button>
+              </form>
+              <p className="mt-4 text-sm text-slate-600 dark:text-gray-400">
+                {TEXT.authPages.login.newHere}{' '}
+                <Link to="/signup" className="text-sky-600 dark:text-sky-400">
+                  {TEXT.authPages.login.createAccount}
+                </Link>
+              </p>
+            </Card>
           </div>
         </div>
-        <div className="absolute right-[10%] top-[12%] h-64 w-64 rounded-full border border-sky-400/45 opacity-70 blur-[0.4px]" />
-        <div className="absolute -bottom-24 -right-12 h-[26rem] w-[26rem] rounded-full border border-indigo-400/50 opacity-70 blur-[0.4px]" />
+        <div className="relative flex items-center justify-start overflow-hidden px-14 py-12">
+          <div className="relative z-10 max-w-[520px]">
+            <p className="mb-3 text-xs uppercase tracking-widest text-sky-700 dark:text-sky-300">
+              {TEXT.app.name}
+            </p>
+            <h1 className="mb-3 text-4xl font-bold leading-tight max-md:text-3xl text-slate-900 dark:text-slate-100">
+              {TEXT.authPages.login.marketing.headline}
+            </h1>
+            <p className="mb-5 max-w-[30rem] text-[0.96rem] text-slate-700 dark:text-slate-300">
+              {TEXT.authPages.login.marketing.body}
+            </p>
+            <ul className="mb-6 flex flex-col gap-1.5 text-sm text-slate-800 dark:text-slate-200">
+              <li className="flex items-start">
+                <span className="mr-2 text-sky-400">•</span>
+                <span>{TEXT.authPages.login.marketing.bullets[0]}</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2 text-sky-400">•</span>
+                <span>{TEXT.authPages.login.marketing.bullets[1]}</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2 text-sky-400">•</span>
+                <span>{TEXT.authPages.login.marketing.bullets[2]}</span>
+              </li>
+            </ul>
+            <div className="flex flex-wrap gap-2">
+              <span className="rounded-full border border-sky-500/40 bg-sky-500/10 px-3 py-1 text-xs text-slate-800 dark:border-sky-400/60 dark:bg-sky-400/15 dark:text-slate-200">
+                {TEXT.authPages.login.marketing.badge1}
+              </span>
+              <span className="rounded-full border border-slate-300 bg-white/70 px-3 py-1 text-xs text-slate-800 dark:border-slate-600/50 dark:bg-slate-900/85 dark:text-slate-200">
+                {TEXT.authPages.login.marketing.badge2}
+              </span>
+            </div>
+          </div>
+          <div className="absolute right-[10%] top-[12%] h-64 w-64 rounded-full border border-sky-400/45 opacity-70 blur-[0.4px]" />
+          <div className="absolute -bottom-24 -right-12 h-[26rem] w-[26rem] rounded-full border border-indigo-400/50 opacity-70 blur-[0.4px]" />
+        </div>
       </div>
-    </div>
+    </>
   )
 }

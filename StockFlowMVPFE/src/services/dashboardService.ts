@@ -1,6 +1,7 @@
 import api from '../api/axios'
 import type { ApiResponse } from '../api/types'
 
+
 export type DashboardData = {
   totalProducts: number
   totalQuantity: number
@@ -17,5 +18,7 @@ export const dashboardService = {
   async getDashboard(): Promise<DashboardData> {
     const response = await api.get<ApiResponse<DashboardData>>('/dashboard')
     return response.data.data
-  },
+    
+  }
+
 }

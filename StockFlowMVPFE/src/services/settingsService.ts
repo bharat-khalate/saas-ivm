@@ -9,10 +9,12 @@ export const settingsService = {
   async getSettings(): Promise<Settings> {
     const response = await api.get<ApiResponse<Settings>>('/settings')
     return response.data.data
+    // return { defaultLowStockThreshold: 5 };
   },
 
   async updateSettings(settings: Settings): Promise<Settings> {
     const response = await api.put<ApiResponse<Settings>>('/settings', settings)
     return response.data.data
+    // return settings;
   },
 }

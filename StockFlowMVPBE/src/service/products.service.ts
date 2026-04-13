@@ -1,4 +1,6 @@
+import { Product } from "../../generated/prisma/index.js";
 import { prisma } from "../db/dbConfig.js";
+import { PaginationValues } from "../utils/pagination.helper.js";
 
 export interface CreateProductInput {
   organizationId: number;
@@ -9,6 +11,11 @@ export interface CreateProductInput {
   costPrice?: number;
   sellingPrice?: number;
   lowStockThreshold?: number;
+  fileUrl: string;
+  isActive: boolean;
+  isFeatured: boolean;
+  categoryName: string;
+  selectedSizes: string[];
 }
 
 export interface UpdateProductInput {
@@ -19,10 +26,15 @@ export interface UpdateProductInput {
   costPrice?: number;
   sellingPrice?: number;
   lowStockThreshold?: number;
+  fileUrl?: string;
+  isActive?: boolean;
+  isFeatured?: boolean;
+  categoryName?: string;
+  selectedSizes?: string[];
 }
 
 export const createProduct = async (data: CreateProductInput) => {
-  return prisma.product.create({
+  const product = await prisma.product.create({ 
     data: {
       organizationId: data.organizationId,
       name: data.name,
@@ -32,21 +44,28 @@ export const createProduct = async (data: CreateProductInput) => {
       costPrice: data.costPrice,
       sellingPrice: data.sellingPrice,
       lowStockThreshold: data.lowStockThreshold,
+      fileUrl: data.fileUrl,
+      isActive: data.isActive,
+      isFeatured: data.isFeatured,
+      categoryName: data.categoryName,
+      selectedSizes: data.selectedSizes
     },
   });
+  return product;
 };
 
-export const getProductById = async (productId: string) => {
-  return prisma.product.findUnique({
+export const getProductById = async (productId: number) => {
+  const product = await prisma.product.findUnique({
     where: { productId },
   });
+  return product;
 };
 
 export const getProductBySkuForOrg = async (
   organizationId: number,
   sku: string,
 ) => {
-  return prisma.product.findUnique({
+  const product = await prisma.product.findUnique({
     where: {
       organizationId_sku: {
         organizationId,
@@ -54,29 +73,90 @@ export const getProductBySkuForOrg = async (
       },
     },
   });
+  return product;
 };
 
-export const listProductsForOrg = async (organizationId: number) => {
-  return prisma.product.findMany({
+
+
+export const getProductBySku = async (sku: string) => {
+  const product = await prisma.product.findFirst({
+    where: { sku },
+  });
+  return product;
+};
+
+export const listProductsForOrg = async (organizationId: number, paginationConfig: PaginationValues) => {
+  const { skip, pageSize } = paginationConfig;
+  const products = await prisma.product.findMany({
     where: { organizationId },
     orderBy: { createdAt: "desc" },
+    skip,
+    take: pageSize,
   });
+  const total = await prisma.product.count({
+    where: { organizationId },
+  });
+  return { products, total };
 };
 
+
+
+
+export const fetchProductsBySkuOrName = async (
+  organizationId: number,
+  paginationConfig: PaginationValues,
+  searchValues: string
+) => {
+  const { skip, pageSize } = paginationConfig;
+
+  // Use an OR condition to match either name or sku
+  const products: Product[] = await prisma.product.findMany({
+    where: {
+      organizationId,
+      OR: [
+        { name: { contains: searchValues, mode: "insensitive" } }, // case-insensitive search for name
+        { sku: { contains: searchValues } }    // case-insensitive search for sku
+      ],
+    },
+    orderBy: { createdAt: "desc" },
+    skip,
+    take: pageSize,
+    distinct: ['productId'], // Ensure there are no duplicates based on the product's unique ID
+  });
+
+  // Get the total number of matching records (without pagination applied)
+  const total = await prisma.product.count({
+    where: {
+      organizationId,
+      OR: [
+        { name: { contains: searchValues, mode: "insensitive" } },
+        { sku: { contains: searchValues } }
+      ],
+    },
+  });
+
+  return { products, total };
+};
+
+
+
+
 export const updateProduct = async (
-  productId: string,
+  productId: number,
   data: UpdateProductInput,
 ) => {
-  return prisma.product.update({
+  const product = await prisma.product.update({
     where: { productId },
     data,
   });
+  return product;
 };
 
-export const deleteProductById = async (productId: string) => {
-  return prisma.product.delete({
+export const deleteProductById = async (productId: number) => {
+  const product = await prisma.product.delete({
     where: { productId },
   });
+  return product;
 };
 
 
