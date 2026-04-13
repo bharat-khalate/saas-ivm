@@ -1,9 +1,0 @@
-{
-  "build": {
-    "builder": "NIXPACKS",
-    "buildCommand": "cd StockFlowMVPBE && npm install && npm run build"
-  },
-  "deploy": {
-    "startCommand": "cd StockFlowMVPBE && npm start"
-  }
-}
