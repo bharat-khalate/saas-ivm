@@ -5,23 +5,24 @@ import {
 } from "../service/settings.service.js";
 import { sendSuccess, sendError } from "../utils/response.util.js";
 
+
 export const getSettingsController = async (req: Request, res: Response) => {
   try {
     const organizationId = (req as any).userId as number;
     if (!organizationId) {
-      return sendError(res, 401, "User not authenticated");
+      return sendError(res, 401, req.t("user.userNotAuthenticatedMessage"));
     }
     const settings = await getOrCreateSettingsForOrg(organizationId);
     return sendSuccess(
       res,
       200,
-      "Settings fetched successfully",
+      req.t("settings.settingsFetchMessage"),
       settings,
     );
   } catch (error) {
     console.error("getSettingsController error", error);
-    const errorMessage = error instanceof Error ? error.message : "Internal server error";
-    return sendError(res, 500, errorMessage, null);
+    const errorMessage = error instanceof Error ? error.message : req.t("common.commonErrorMessage");
+    return sendError(res, 500, req.t("common.commonErrorMessage"), req.t("common.commonErrorMessage"));
   }
 };
 
@@ -37,7 +38,7 @@ export const updateSettingsController = async (
       return sendError(
         res,
         400,
-        "defaultLowStockThreshold is required",
+        req.t("settings.stockThresholdMissingMessage"),
       );
     }
 
@@ -50,7 +51,7 @@ export const updateSettingsController = async (
       return sendError(
         res,
         400,
-        "defaultLowStockThreshold must be a non-negative number or null",
+        req.t("settings.invalidStockThresholdMessage"),
       );
     }
 
@@ -58,13 +59,13 @@ export const updateSettingsController = async (
     return sendSuccess(
       res,
       200,
-      "Settings updated successfully",
+      req.t("settings.settingsUpdatedMessage"),
       settings,
     );
   } catch (error) {
     console.error("updateSettingsController error", error);
-    const errorMessage = error instanceof Error ? error.message : "Internal server error";
-    return sendError(res, 500, errorMessage, null);
+    const errorMessage = error instanceof Error ? error.message : req.t("common.commonErrorMessage");
+    return sendError(res, 500, req.t("common.commonErrorMessage"), req.t("common.commonErrorMessage"));
   }
 };
 

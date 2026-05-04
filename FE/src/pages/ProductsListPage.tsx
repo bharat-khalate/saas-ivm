@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { FiEye, FiEdit2, FiTrash2 } from 'react-icons/fi'
 import { productService } from '../services/productService'
 import type { Product } from '../services/productService'
-import { TEXT } from '../constants/text'
+
 import {
   Button,
   Card,
@@ -20,6 +20,8 @@ import PageTitle from '../components/PageTitle'
 import { COLUMN_SIZE, SEARCH_KEYWORD_MIN_LENGTH } from '../utils/constants'
 import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
+import { useTranslation } from 'react-i18next'
+import i18n from 'i18next';
 
 interface LoadPageParam {
   page: number;
@@ -38,6 +40,7 @@ export function ProductsListPage() {
     name: string
   } | null>(null)
   const [pagitionConfig, setPaginationConfig] = useState<PaginationMeta>(paginationConfig)
+  const { t } = useTranslation();
 
   const loadProducts = async (paginationConfig?: LoadPageParam) => {
     setLoading(true)
@@ -56,9 +59,9 @@ export function ProductsListPage() {
       setPaginationConfig(data.meta);
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message ?? TEXT.products.loadFailed)
+        setError(err.message ?? t("products.loadFailed"))
       } else {
-        setError(TEXT.products.loadFailed)
+        setError(t("products.loadFailed"))
       }
     } finally {
       setLoading(false)
@@ -66,6 +69,9 @@ export function ProductsListPage() {
   }
 
 
+  useEffect(() => {
+    loadProducts();
+  }, [i18n.language]);
 
   useEffect(() => {
     loadProducts()
@@ -88,12 +94,12 @@ export function ProductsListPage() {
     try {
       await productService.deleteProduct(id)
       await loadProducts()
-      showToast(TEXT.products.deleteSuccess, 'success')
+      showToast(t("products.deleteSuccess"), 'success')
     } catch (err) {
       if (err instanceof Error) {
-        showToast(err.message ?? TEXT.products.deleteFailed, 'error')
+        showToast(err.message ?? t("products.deleteFailed"), 'error')
       } else {
-        showToast(TEXT.products.deleteFailed, 'error')
+        showToast(t("products.deleteFailed"), 'error')
       }
     } finally {
       setDeletingId(null)
@@ -120,15 +126,15 @@ export function ProductsListPage() {
   return (
     <>
       <PageTitle
-        title={TEXT.products.pageTitle}
-        subTitle={TEXT.products.table.pageTitle}
+        title={t("products.pageTitle")}
+        subTitle={t("products.table.pageTitle")}
       />
 
       <div className="w-full">
         <div className="mb-5 flex items-center justify-between">
-          <h1 className="mb-0 text-2xl font-semibold">{TEXT.products.title}</h1>
+          <h1 className="mb-0 text-2xl font-semibold">{t("products.title")}</h1>
           <Button onClick={() => navigate('/products/new')}>
-            {TEXT.products.add}
+            {t("products.add")}
           </Button>
         </div>
 
@@ -137,14 +143,14 @@ export function ProductsListPage() {
             <div className="flex-1">
               <input
                 type="search"
-                placeholder={TEXT.products.searchPlaceholder}
+                placeholder={t("products.searchPlaceholder", { "min": SEARCH_KEYWORD_MIN_LENGTH })}
                 value={search}
                 onChange={debouncedSearch}
                 className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-900 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/40 dark:border-slate-600/50 dark:bg-slate-900/80 dark:text-slate-200 dark:focus:border-sky-400 dark:focus:ring-sky-400/60"
               />
               <p className="mt-1 text-xs text-slate-400">
                 {search.trim().length > 0 && search.trim().length < SEARCH_KEYWORD_MIN_LENGTH
-                  ? TEXT.products.searchHint(SEARCH_KEYWORD_MIN_LENGTH - search.trim().length)
+                  ? t("products.searchHint(SEARCH_KEYWORD_MIN_LENGTH - search.trim().length)")
                   : ' '}
               </p>
             </div>
@@ -156,14 +162,14 @@ export function ProductsListPage() {
             <Alert type="error">{error}</Alert>
           ) : filtered.length === 0 ? (
             <p className="text-gray-400">
-              {TEXT.products.empty}
+              {t("products.empty")}
             </p>
           ) : (
             <DataTable<Product>
               columns={[
                 {
                   key: "fileUrl",
-                  header: TEXT.products.table.preview,
+                  header: t("products.table.preview"),
                   value: (p) => (
                     p.fileUrl ? (
                       <Zoom>
@@ -178,7 +184,7 @@ export function ProductsListPage() {
                 },
                 {
                   key: 'name',
-                  header: TEXT.products.table.name,
+                  header: t("products.table.name"),
                   value: (p) => (
                     <div className="max-w-[220px] truncate" title={p.name}>
                       {p.name}
@@ -187,7 +193,7 @@ export function ProductsListPage() {
                 },
                 {
                   key: 'sku',
-                  header: TEXT.products.table.sku,
+                  header: t("products.table.sku"),
                   value: (p) => (
                     <div className="max-w-[160px] truncate" title={p.sku}>
                       {p.sku}
@@ -196,7 +202,7 @@ export function ProductsListPage() {
                 },
                 {
                   key: 'categoryName',
-                  header: TEXT.products.table.category,
+                  header: t("products.table.category"),
                   value: (p) => (
                     <div className="max-w-[180px] truncate" title={p.categoryName ?? ''}>
                       {p.categoryName ?? '-'}
@@ -205,12 +211,12 @@ export function ProductsListPage() {
                 },
                 {
                   key: 'quantityOnHand',
-                  header: TEXT.products.table.quantity,
+                  header: t("products.table.quantity"),
                   value: (p) => p.quantityOnHand ?? 0,
                 },
                 {
                   key: 'sellingPrice',
-                  header: TEXT.products.table.sellingPrice,
+                  header: t("products.table.sellingPrice"),
                   value: (p) =>
                     p.sellingPrice != null && !isNaN(Number(p.sellingPrice))
                       ? Number(p.sellingPrice).toFixed(2)
@@ -219,7 +225,7 @@ export function ProductsListPage() {
 
                 {
                   key: 'action',
-                  header: TEXT.products.table.action,
+                  header: t("products.table.action"),
                   value: (p) => {
                     const rowId =
                       (p as Product as { id?: number }).id ??
@@ -232,16 +238,16 @@ export function ProductsListPage() {
                             <Link
                               to={`/products/${rowId}`}
                               className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-sky-500/60 text-sky-400 hover:bg-sky-500/10"
-                              aria-label={TEXT.products.table.view}
-                              title={TEXT.products.table.view}
+                              aria-label={t("products.table.view")}
+                              title={t("products.table.view")}
                             >
                               <FiEye className="h-4 w-4" />
                             </Link>
                             <Link
                               to={`/products/${rowId}/edit`}
                               className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-indigo-500/60 text-indigo-300 hover:bg-indigo-500/10"
-                              aria-label={TEXT.products.table.edit}
-                              title={TEXT.products.table.edit}
+                              aria-label={t("products.table.edit")}
+                              title={t("products.table.edit")}
                             >
                               <FiEdit2 className="h-4 w-4" />
                             </Link>
@@ -249,8 +255,8 @@ export function ProductsListPage() {
                               className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-red-500/50 text-red-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"
                               onClick={() => handleDeleteClick(Number(rowId), p.name)}
                               disabled={deletingId === rowId}
-                              aria-label={TEXT.common.delete}
-                              title={TEXT.common.delete}
+                              aria-label={t("common.delete")}
+                              title={t("common.delete")}
                             >
                               {deletingId === rowId ? (
                                 <span className="text-xs">...</span>
@@ -294,12 +300,12 @@ export function ProductsListPage() {
 
         <ConfirmDialog
           isOpen={confirmDelete !== null}
-          title={TEXT.products.deleteDialog.title}
-          message={TEXT.products.deleteDialog.message(confirmDelete?.name)}
+          title={t("products.deleteDialog.title")}
+          message={t("products.deleteDialog.message", { name: confirmDelete?.name })}
           onConfirm={handleDeleteConfirm}
           onCancel={() => setConfirmDelete(null)}
-          confirmText={TEXT.products.deleteDialog.confirmText}
-          cancelText={TEXT.products.deleteDialog.cancelText}
+          confirmText={t("products.deleteDialog.confirmText")}
+          cancelText={t("products.deleteDialog.cancelText")}
           variant="danger"
         />
       </div>

@@ -1,0 +1,137 @@
+{
+    "app": {
+        "name": "StockFlow",
+        "nav": {
+            "products": "Products"
+        },
+        "language": {
+            "toggleAria": "Toggle language",
+            "toEnglish": "Switch to English",
+            "toHindi": "Switch to Hindi"
+        },
+        "theme": {
+            "toggleAria": "Toggle theme",
+            "toLight": "Switch to light mode",
+            "toDark": "Switch to dark mode"
+        },
+        "auth": {
+            "logout": "Logout"
+        }
+    },
+    "common": {
+        "back": "Back",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "deleting": "Deleting...",
+        "saving": "Saving...",
+        "saveFailed": "Save failed",
+        "reset": "Reset"
+    },
+    "products": {
+        "pageTitle": "Products",
+        "title": "Products",
+        "add": "+ Add product",
+        "empty": "No products yet. Create your first product.",
+        "searchPlaceholder": "Search by name or SKU (min {{min}} chars)",
+        "searchHint": "Type {{remaining}} more character(s) to search",
+        "loadFailed": "Failed to load products",
+        "deleteSuccess": "Product deleted successfully",
+        "deleteFailed": "Delete failed",
+        "deleteDialog": {
+            "title": "Delete Product",
+            "message": "Are you sure you want to delete \"{{name}}\"? This cannot be undone.",
+            "confirmText": "Delete",
+            "cancelText": "Cancel"
+        },
+        "table": {
+            "pageTitle": "List",
+            "name": "Name",
+            "sku": "SKU",
+            "category": "Category",
+            "quantity": "Quantity",
+            "sellingPrice": "Selling price",
+            "action": "Action",
+            "view": "View",
+            "edit": "Edit",
+            "preview": "Preview"
+        },
+        "form": {
+            "createPageTitle": "Create",
+            "editPageTitle": "Edit",
+            "createTitle": "Add product",
+            "editTitle": "Edit product",
+            "createButton": "Create product",
+            "editButton": "Save changes",
+            "fields": {
+                "name": "Name",
+                "category": "Category",
+                "sku": "SKU",
+                "active": "Active",
+                "featured": "Featured",
+                "description": "Description",
+                "quantityOnHand": "Quantity on hand",
+                "costPrice": "Cost price",
+                "sellingPrice": "Selling price",
+                "sizes": "Sizes",
+                "image": "Product image",
+                "lowStockThreshold": "Low stock threshold"
+            },
+            "categoryPlaceholder": "Select category",
+            "uploadImage": "Upload image",
+            "chooseImage": "Choose image",
+            "imageRequired": "Product image is required",
+            "createdSuccess": "Product created successfully",
+            "updatedSuccess": "Product updated successfully",
+            "loading": "Loading product..."
+        },
+        "detail": {
+            "pageTitle": "Details",
+            "title": "Product details",
+            "imageLabel": "Product image",
+            "noImage": "No image",
+            "backToProducts": "Back to products",
+            "loadFailed": "Failed to load product",
+            "labels": {
+                "name": "Name",
+                "sku": "SKU",
+                "category": "Category",
+                "quantityOnHand": "Quantity on hand",
+                "costPrice": "Cost price",
+                "sellingPrice": "Selling price",
+                "lowStockThreshold": "Low stock threshold",
+                "status": "Status",
+                "sizes": "Sizes",
+                "description": "Description"
+            },
+            "values": {
+                "na": "—",
+                "active": "Active",
+                "inactive": "Inactive",
+                "featuredSep": " • Featured"
+            }
+        }
+    },
+    "authPages": {
+        "pageTitle": "USER",
+        "login": {
+            "pageTitle": "Login",
+            "title": "Welcome back",
+            "subtitle": "Sign in to view your inventory, update stock levels, and keep an eye on low-stock items.",
+            "submit": "Sign in",
+            "submitting": "Signing in...",
+            "failed": "Login failed",
+            "newHere": "New here?",
+            "createAccount": "Create an account",
+            "fields": {
+                "email": "Email",
+                "password": "Password"
+            },
+            "validation": {
+                "emailRequired": "Email is required",
+                "emailValid": "Email must be valid",
+                "passwordRequired": "Password is required",
+                "passwordLen": "Password must be greater than 5 characters"
+            }
+        }
+    }
+}

@@ -19,8 +19,6 @@ const Pagination = ({ meta, onPageChange }: Props) => {
     const { page, totalPages } = meta;
 
 
-    // Show previous, current, next pages
-    const pages = getPaginationTabUi(page, totalPages);
 
 
     return (

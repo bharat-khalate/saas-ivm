@@ -5,6 +5,7 @@ import { loginThunk } from '../store/authSlice'
 import { Card, Button, FormField, Alert } from '../components'
 import { TEXT } from '../constants/text'
 import PageTitle from '../components/PageTitle'
+import { useTranslation } from 'react-i18next'
 
 export function LoginPage() {
   const dispatch = useAppDispatch()
@@ -14,20 +15,21 @@ export function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({})
+  const { t } = useTranslation();
 
   const inputClassName =
     'rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-slate-900 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/40 dark:border-slate-600/50 dark:bg-slate-900/80 dark:text-slate-200 dark:focus:border-sky-400 dark:focus:ring-sky-400/60'
 
   const validateEmail = (value: string) => {
-    if (!value.trim()) return TEXT.authPages.login.validation.emailRequired
+    if (!value.trim()) return t("authPages.login.validation.emailRequired")
     // simple email check
-    if (!/^\S+@\S+\.\S+$/.test(value)) return TEXT.authPages.login.validation.emailValid
+    if (!/^\S+@\S+\.\S+$/.test(value)) return t("authPages.login.validation.emailValid")
     return ''
   }
 
   const validatePassword = (value: string) => {
-    if (!value) return TEXT.authPages.login.validation.passwordRequired
-    if (value.length < 6) return TEXT.authPages.login.validation.passwordLen
+    if (!value) return t("authPages.login.validation.passwordRequired")
+    if (value.length < 6) return t("authPages.login.validation.passwordLen")
     return ''
   }
 
@@ -48,9 +50,9 @@ export function LoginPage() {
       navigate('/products')
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message ?? TEXT.authPages.login.failed)
+        setError(err.message ?? t("authPages.login.failed"))
       } else {
-        setError(TEXT.authPages.login.failed)
+        setError(t("authPages.login.failed"))
       }
     } finally {
       setLoading(false)
@@ -60,8 +62,8 @@ export function LoginPage() {
   return (
     <>
       <PageTitle
-        title={TEXT.authPages.pageTitle}
-        subTitle={TEXT.authPages.login.pageTitle}
+        title={t("authPages.pageTitle")}
+        subTitle={t("authPages.login.pageTitle")}
       />
       <div className="grid min-h-screen md:grid-cols-[1.6fr_3.4fr] gap-4 max-md:gap-0 grid-cols-1">
 
@@ -69,10 +71,10 @@ export function LoginPage() {
           <div className="w-full ">
             <Card>
               <h2 className="mb-4 mt-0 text-2xl font-semibold text-slate-900 dark:text-slate-100">
-                {TEXT.authPages.login.title}
+                {t("authPages.login.title")}
               </h2>
               <p className="mb-5 text-sm text-slate-600 dark:text-gray-400">
-                {TEXT.authPages.login.subtitle}
+                {t("authPages.login.subtitle")}
               </p>
               {error && (
                 <Alert type="error" className="mb-3">
@@ -80,7 +82,7 @@ export function LoginPage() {
                 </Alert>
               )}
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                <FormField label={TEXT.authPages.login.fields.email}>
+                <FormField label={t("authPages.login.fields.email")}>
                   <input
                     type="email"
                     value={email}
@@ -96,7 +98,7 @@ export function LoginPage() {
                     <p className="text-red-600 dark:text-red-400 text-sm">{fieldErrors.email}</p>
                   )}
                 </FormField>
-                <FormField label={TEXT.authPages.login.fields.password}>
+                <FormField label={t("authPages.login.fields.password")}>
                   <input
                     type="password"
                     value={password}
@@ -113,13 +115,13 @@ export function LoginPage() {
                   )}
                 </FormField>
                 <Button className="mt-1" type="submit" disabled={loading}>
-                  {loading ? TEXT.authPages.login.submitting : TEXT.authPages.login.submit}
+                  {loading ? t("authPages.login.submitting") : t("authPages.login.submit")}
                 </Button>
               </form>
               <p className="mt-4 text-sm text-slate-600 dark:text-gray-400">
-                {TEXT.authPages.login.newHere}{' '}
+                {t("authPages.login.newHere")}{' '}
                 <Link to="/signup" className="text-sky-600 dark:text-sky-400">
-                  {TEXT.authPages.login.createAccount}
+                  {t("authPages.login.createAccount")}
                 </Link>
               </p>
             </Card>
@@ -128,34 +130,34 @@ export function LoginPage() {
         <div className="relative flex items-center justify-start overflow-hidden px-14 py-12">
           <div className="relative z-10 max-w-[520px]">
             <p className="mb-3 text-xs uppercase tracking-widest text-sky-700 dark:text-sky-300">
-              {TEXT.app.name}
+              {t("app.name")}
             </p>
             <h1 className="mb-3 text-4xl font-bold leading-tight max-md:text-3xl text-slate-900 dark:text-slate-100">
-              {TEXT.authPages.login.marketing.headline}
+              {t("authPages.login.marketing.headline")}
             </h1>
             <p className="mb-5 max-w-[30rem] text-[0.96rem] text-slate-700 dark:text-slate-300">
-              {TEXT.authPages.login.marketing.body}
+              {t("authPages.login.marketing.body")}
             </p>
             <ul className="mb-6 flex flex-col gap-1.5 text-sm text-slate-800 dark:text-slate-200">
               <li className="flex items-start">
                 <span className="mr-2 text-sky-400">•</span>
-                <span>{TEXT.authPages.login.marketing.bullets[0]}</span>
+                <span>{t("authPages.login.marketing.bullets[0]")}</span>
               </li>
               <li className="flex items-start">
                 <span className="mr-2 text-sky-400">•</span>
-                <span>{TEXT.authPages.login.marketing.bullets[1]}</span>
+                <span>{t("authPages.login.marketing.bullets[1]")}</span>
               </li>
               <li className="flex items-start">
                 <span className="mr-2 text-sky-400">•</span>
-                <span>{TEXT.authPages.login.marketing.bullets[2]}</span>
+                <span>{t("authPages.login.marketing.bullets[2]")}</span>
               </li>
             </ul>
             <div className="flex flex-wrap gap-2">
               <span className="rounded-full border border-sky-500/40 bg-sky-500/10 px-3 py-1 text-xs text-slate-800 dark:border-sky-400/60 dark:bg-sky-400/15 dark:text-slate-200">
-                {TEXT.authPages.login.marketing.badge1}
+                {t("authPages.login.marketing.badge1")}
               </span>
               <span className="rounded-full border border-slate-300 bg-white/70 px-3 py-1 text-xs text-slate-800 dark:border-slate-600/50 dark:bg-slate-900/85 dark:text-slate-200">
-                {TEXT.authPages.login.marketing.badge2}
+                {t("authPages.login.marketing.badge2")}
               </span>
             </div>
           </div>

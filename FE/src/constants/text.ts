@@ -6,6 +6,11 @@ export const TEXT = {
     nav: {
       products: 'Products',
     },
+    language: {
+      toggleAria: 'Toggle language',
+      toEnglish: 'Switch to English',
+      toHindi: 'Switch to Hindi',
+    },
     theme: {
       toggleAria: 'Toggle theme',
       toLight: 'Switch to light mode',

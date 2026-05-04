@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { clearAuth, loadAuth, saveAuth } from './types'
+import i18n from 'i18next';
 
 const API_BASE = import.meta.env.VITE_API_BASE || '/api'
 
@@ -33,6 +34,8 @@ function flushRefreshQueue(token: string | null) {
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('sf_token')
+    const lang = localStorage.getItem('lang') || 'en'
+    config.headers['Accept-Language'] = i18n.language;
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`
     }
@@ -51,7 +54,7 @@ api.interceptors.response.use(
         : rawMessage || 'Request failed'
 
       const apiError = new Error(message)
-      ;(apiError as Error & { response?: unknown }).response = data
+        ; (apiError as Error & { response?: unknown }).response = data
       return Promise.reject(apiError)
     }
     return response
@@ -126,7 +129,7 @@ api.interceptors.response.use(
         : rawMessage || error.response.statusText || 'Request failed'
 
       const apiError = new Error(message)
-      ;(apiError as Error & { response?: unknown }).response = data
+        ; (apiError as Error & { response?: unknown }).response = data
       return Promise.reject(apiError)
     } else if (error.request) {
       console.warn('Failed to send request: No response received')

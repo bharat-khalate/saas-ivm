@@ -1,0 +1,114 @@
+{
+    "app": {
+        "name": "StockFlow",
+        "nav": {
+            "products": "उत्पाद"
+        },
+        "language": {
+            "toggleAria": "भाषा बदलें",
+            "toEnglish": "अंग्रेज़ी में बदलें",
+            "toHindi": "हिंदी में बदलें"
+        },
+        "theme": {
+            "toggleAria": "थीम बदलें",
+            "toLight": "लाइट मोड में बदलें",
+            "toDark": "डार्क मोड में बदलें"
+        },
+        "auth": {
+            "logout": "लॉगआउट"
+        }
+    },
+    "common": {
+        "back": "वापस",
+        "cancel": "रद्द करें",
+        "delete": "हटाएं",
+        "deleting": "हटाया जा रहा है...",
+        "saving": "सहेजा जा रहा है...",
+        "saveFailed": "सहेजना विफल",
+        "reset": "रीसेट"
+    },
+    "products": {
+        "pageTitle": "उत्पाद",
+        "title": "उत्पाद",
+        "add": "+ उत्पाद जोड़ें",
+        "empty": "अभी तक कोई उत्पाद नहीं है। अपना पहला उत्पाद बनाएं।",
+        "searchPlaceholder": "नाम या SKU से खोजें (कम से कम {{min}} अक्षर)",
+        "searchHint": "खोजने के लिए {{remaining}} और अक्षर टाइप करें",
+        "loadFailed": "उत्पाद लोड करने में विफल",
+        "deleteSuccess": "उत्पाद सफलतापूर्वक हटाया गया",
+        "deleteFailed": "हटाना विफल",
+        "deleteDialog": {
+            "title": "उत्पाद हटाएं",
+            "message": "क्या आप \"{{name}}\" को हटाना चाहते हैं? इसे वापस नहीं किया जा सकता।",
+            "confirmText": "हटाएं",
+            "cancelText": "रद्द करें"
+        },
+        "table": {
+            "pageTitle": "सूची",
+            "name": "नाम",
+            "sku": "SKU",
+            "category": "श्रेणी",
+            "quantity": "मात्रा",
+            "sellingPrice": "बिक्री मूल्य",
+            "action": "क्रिया",
+            "view": "देखें",
+            "edit": "संपादित करें",
+            "preview": "पूर्वावलोकन"
+        },
+        "form": {
+            "createPageTitle": "बनाएं",
+            "editPageTitle": "संपादित करें",
+            "createTitle": "उत्पाद जोड़ें",
+            "editTitle": "उत्पाद संपादित करें",
+            "createButton": "उत्पाद बनाएं",
+            "editButton": "परिवर्तन सहेजें",
+            "fields": {
+                "name": "नाम",
+                "category": "श्रेणी",
+                "sku": "SKU",
+                "active": "सक्रिय",
+                "featured": "विशेष",
+                "description": "विवरण",
+                "quantityOnHand": "उपलब्ध मात्रा",
+                "costPrice": "लागत मूल्य",
+                "sellingPrice": "बिक्री मूल्य",
+                "sizes": "आकार",
+                "image": "उत्पाद छवि",
+                "lowStockThreshold": "कम स्टॉक सीमा"
+            },
+            "categoryPlaceholder": "श्रेणी चुनें",
+            "uploadImage": "छवि अपलोड करें",
+            "chooseImage": "छवि चुनें",
+            "imageRequired": "उत्पाद छवि आवश्यक है",
+            "createdSuccess": "उत्पाद सफलतापूर्वक बनाया गया",
+            "updatedSuccess": "उत्पाद सफलतापूर्वक अपडेट किया गया",
+            "loading": "उत्पाद लोड हो रहा है..."
+        },
+        "detail": {
+            "pageTitle": "विवरण",
+            "title": "उत्पाद विवरण",
+            "imageLabel": "उत्पाद छवि",
+            "noImage": "कोई छवि नहीं",
+            "backToProducts": "उत्पादों पर वापस जाएं",
+            "loadFailed": "उत्पाद लोड करने में विफल",
+            "labels": {
+                "name": "नाम",
+                "sku": "SKU",
+                "category": "श्रेणी",
+                "quantityOnHand": "उपलब्ध मात्रा",
+                "costPrice": "लागत मूल्य",
+                "sellingPrice": "बिक्री मूल्य",
+                "lowStockThreshold": "कम स्टॉक सीमा",
+                "status": "स्थिति",
+                "sizes": "आकार",
+                "description": "विवरण"
+            },
+            "values": {
+                "na": "—",
+                "active": "सक्रिय",
+                "inactive": "निष्क्रिय",
+                "featuredSep": " • विशेष"
+            }
+        }
+    }
+}

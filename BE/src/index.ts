@@ -6,6 +6,7 @@ import settingsRoutes from "./routes/settings.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
 import categoryRouter from "./routes/category.route.js";
 import fileRouter from "./routes/file.routes.js";
+import { i18n, i18nextMiddleware } from './i18n/index.js'
 
 
 
@@ -20,6 +21,7 @@ app.use(cors());
 //   console.log(req.file);
 //   res.send("File uploaded");
 // });
+app.use(i18nextMiddleware.handle(i18n));
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/settings", settingsRoutes);

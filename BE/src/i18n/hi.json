@@ -1,0 +1,82 @@
+{
+    "app": {
+        "name": "StockFlow"
+    },
+    "commonFieldValidation": {
+        "invalidEmailMessage": "कृपया एक मान्य ईमेल पता दर्ज करें",
+        "invalidPasswordMessage": "पासवर्ड कम से कम 6 अक्षरों का होना चाहिए",
+        "requiredFieldMessage": "यह फ़ील्ड आवश्यक है",
+        "shortOrgnizationNameMessage": "संगठन का नाम कम से कम 6 अक्षरों का होना चाहिए",
+        "longOrganizationNameMessage": "संगठन का नाम अधिकतम 15 अक्षरों का होना चाहिए",
+        "alphaOrganizationNameMessage": "संगठन का नाम केवल अक्षरों में होना चाहिए"
+    },
+    "common": {
+        "commonErrorMessage": "कुछ गलत हो गया। कृपया पुनः प्रयास करें।"
+    },
+    "product": {
+        "duplicateSkuMessage": "इस SKU के साथ एक उत्पाद पहले से मौजूद है। कृपया एक यूनिक SKU उपयोग करें।",
+        "productCreatedMessage": "उत्पाद सफलतापूर्वक बनाया गया",
+        "productUpdatedMessage": "उत्पाद सफलतापूर्वक अपडेट किया गया",
+        "productDeletedMessage": "उत्पाद सफलतापूर्वक हटाया गया",
+        "productFetchMessage": "उत्पाद विवरण सफलतापूर्वक प्राप्त किया गया",
+        "productCreateFailedMessage": "उत्पाद बनाने में विफल। कृपया पुनः प्रयास करें।",
+        "productUpdateFailedMessage": "उत्पाद अपडेट करने में विफल। कृपया पुनः प्रयास करें।",
+        "productDeleteFailedMessage": "उत्पाद हटाने में विफल। कृपया पुनः प्रयास करें।",
+        "productFetchFailedMessage": "उत्पाद विवरण प्राप्त करने में विफल। कृपया पुनः प्रयास करें।",
+        "productNotFoundMessage": "उत्पाद नहीं मिला",
+        "invalidOrganizationMessage": "अमान्य संगठन आईडी",
+        "numericalProductNameMessage": "उत्पाद नाम में संख्या नहीं होनी चाहिए",
+        "skuNonNumericMessage": "SKU केवल संख्याओं में होना चाहिए",
+        "maxLengthDescriptionMessage": "विवरण 200 शब्दों से अधिक नहीं हो सकता",
+        "quantityNegativeMessage": "मात्रा नकारात्मक नहीं हो सकती",
+        "costPriceNegativeMessage": "लागत मूल्य नकारात्मक नहीं हो सकता",
+        "sellingPriceNegativeMessage": "विक्रय मूल्य नकारात्मक नहीं हो सकता",
+        "lowStockThresholdNegativeMessage": "लो स्टॉक थ्रेशहोल्ड नकारात्मक नहीं हो सकता",
+        "invalidSizeMessage": "कृपया एक मान्य आकार दर्ज करें"
+    },
+    "category": {
+        "categoryCreatedMessage": "श्रेणी सफलतापूर्वक बनाई गई",
+        "categoryFetchMessage": "श्रेणियाँ सफलतापूर्वक प्राप्त की गईं",
+        "categoryFetchFailedMessage": "श्रेणियाँ प्राप्त करने में विफल। कृपया पुनः प्रयास करें।",
+        "categoryCreateFailedMessage": "श्रेणी बनाने में विफल। कृपया पुनः प्रयास करें।"
+    },
+    "dashboard": {
+        "fetchStatsFailedMessage": "डैशबोर्ड डेटा प्राप्त करने में विफल। कृपया पुनः प्रयास करें।",
+        "fetchStatsMessage": "डैशबोर्ड डेटा सफलतापूर्वक प्राप्त किया गया"
+    },
+    "file": {
+        "invalidFileNameMessage": "अमान्य फ़ाइल नाम। कृपया पुनः प्रयास करें।",
+        "fileUploadFailedMessage": "फ़ाइल अपलोड विफल। कृपया पुनः प्रयास करें।",
+        "fileUploadedMessage": "फ़ाइल सफलतापूर्वक अपलोड की गई",
+        "failFileGetMessage": "फ़ाइल प्राप्त करने में विफल। कृपया पुनः प्रयास करें।"
+    },
+    "settings": {
+        "settingsUpdatedMessage": "सेटिंग्स सफलतापूर्वक अपडेट की गईं",
+        "settingsUpdateFailedMessage": "सेटिंग्स अपडेट करने में विफल। कृपया पुनः प्रयास करें।",
+        "settingsFetchMessage": "सेटिंग्स सफलतापूर्वक प्राप्त की गईं",
+        "settingsFetchFailedMessage": "सेटिंग्स प्राप्त करने में विफल। कृपया पुनः प्रयास करें।",
+        "invalidStockThresholdMessage": "लो स्टॉक थ्रेशहोल्ड एक गैर-नकारात्मक, शून्य से बड़ा संख्या होना चाहिए",
+        "stockThresholdMissingMessage": "लो स्टॉक थ्रेशहोल्ड आवश्यक है"
+    },
+    "user": {
+        "userNotAuthenticatedMessage": "उपयोगकर्ता प्रमाणित नहीं है",
+        "userNotFoundMessage": "उपयोगकर्ता नहीं मिला",
+        "userExists": "उपयोगकर्ता पहले से मौजूद है",
+        "userNotFound": "उपयोगकर्ता नहीं मिला",
+        "userDeleted": "उपयोगकर्ता सफलतापूर्वक हटाया गया",
+        "fetchSuccess": "उपयोगकर्ता सफलतापूर्वक प्राप्त किया गया",
+        "usersListSuccess": "उपयोगकर्ताओं की सूची सफलतापूर्वक प्राप्त की गई",
+        "fieldsRequiredMessage": "ईमेल, पासवर्ड और संगठन का नाम आवश्यक हैं",
+        "invalidUserIdMessage": "अमान्य उपयोगकर्ता आईडी"
+    },
+    "auth": {
+        "registerSuccess": "उपयोगकर्ता सफलतापूर्वक पंजीकृत हुआ",
+        "loginSuccess": "लॉगिन सफल हुआ",
+        "tokenRefreshed": "टोकन रिफ्रेश किया गया",
+        "invalidCredentials": "अमान्य क्रेडेंशियल्स",
+        "authHeaderMissing": "ऑथराइजेशन हेडर गायब है",
+        "invalidToken": "अमान्य टोकन",
+        "tokenMissingMessage": "ऑथराइजेशन हेडर गायब है",
+        "authFieldsRequired": "ईमेल और पासवर्ड आवश्यक हैं"
+    }
+}

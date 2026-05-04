@@ -2,18 +2,19 @@ import { z } from "zod";
 import { validator } from "./data.validator.js"
 import { toArray, toBoolean, toDate, toFloat, toInt } from "../utils/convereter.util.js";
 import {
-    INVALID_PRODUCT_ID,
-    INVALID_ORGANIZATION_ID,
-    PRODUCT_NAME_MIN_LENGTH,
-    PRODUCT_NAME_NO_NUMBERS,
-    SKU_NUMERIC_ONLY,
-    DESCRIPTION_MAX_LENGTH,
-    QUANTITY_NEGATIVE,
-    COST_PRICE_NEGATIVE,
-    SELLING_PRICE_NEGATIVE,
-    LOW_STOCK_NEGATIVE,
-    INVALID_SIZE
+  INVALID_PRODUCT_ID,
+  INVALID_ORGANIZATION_ID,
+  PRODUCT_NAME_MIN_LENGTH,
+  PRODUCT_NAME_NO_NUMBERS,
+  SKU_NUMERIC_ONLY,
+  DESCRIPTION_MAX_LENGTH,
+  QUANTITY_NEGATIVE,
+  COST_PRICE_NEGATIVE,
+  SELLING_PRICE_NEGATIVE,
+  LOW_STOCK_NEGATIVE,
+  INVALID_SIZE
 } from "../config/global.config.js";
+
 
 
 
@@ -22,30 +23,30 @@ export const ProductSchema = z.object({
 
   organizationId: z.preprocess(
     toInt,
-    validator.number(INVALID_ORGANIZATION_ID),
+    validator.number("product.invalidOrganizationMessage"),
   ),
 
   name: validator
     .string()
     .min(5, { message: PRODUCT_NAME_MIN_LENGTH })
-    .refine((val) => !/\d/.test(val), { message: PRODUCT_NAME_NO_NUMBERS }),
+    .refine((val) => !/\d/.test(val), { message: "product.numericalProductNameMessage" }),
 
   sku: validator
     .string()
-    .regex(/^\d+$/, { message: SKU_NUMERIC_ONLY }),
+    .regex(/^\d+$/, { message: "product.skuNonNumericMessage" }),
 
   description: validator
     .optionalString()
     .refine(
       (val) => !val || val.trim().split(/\s+/).length <= 200,
-      { message: DESCRIPTION_MAX_LENGTH },
+      { message: "product.maxLengthDescriptionMessage" },
     ),
 
   quantityOnHand: z.preprocess(
     toInt,
     validator.optionalNumber().refine(
       (val) => val === undefined || val > 0,
-      { message: QUANTITY_NEGATIVE },
+      { message: "product.quantityNegativeMessage" },
     ),
   ),
 
@@ -53,7 +54,7 @@ export const ProductSchema = z.object({
     toFloat,
     validator.optionalDecimal().refine(
       (val) => val === undefined || val > 0,
-      { message: COST_PRICE_NEGATIVE },
+      { message: "product.costPriceNegativeMessage" },
     ),
   ),
 
@@ -61,14 +62,14 @@ export const ProductSchema = z.object({
     toFloat,
     validator.optionalDecimal().refine(
       (val) => val === undefined || val > 0,
-      { message: SELLING_PRICE_NEGATIVE },
+      { message: "product.sellingPriceNegativeMessage" },
     ),
   ),
   lowStockThreshold: z.preprocess(
     toInt,
     validator.optionalNumber().refine(
       (val) => val === undefined || val >= 0,
-      { message: LOW_STOCK_NEGATIVE },
+      { message: "product.lowStockThresholdNegativeMessage" },
     ),
   ),
   isActive: z.preprocess(toBoolean, validator.optionalBoolean()),
@@ -79,7 +80,7 @@ export const ProductSchema = z.object({
   fileUrl: validator.string(),
   selectedSizes: z.preprocess(
     toArray,
-    validator.list(INVALID_SIZE),
+    validator.list("product.invalidSizeMessage"),
   )
     .optional()
     .default([]),

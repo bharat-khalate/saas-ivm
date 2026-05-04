@@ -16,6 +16,7 @@ export interface CreateProductInput {
   isFeatured: boolean;
   categoryName: string;
   selectedSizes: string[];
+  language?: string; // ✅ NEW
 }
 
 export interface UpdateProductInput {
@@ -31,39 +32,60 @@ export interface UpdateProductInput {
   isFeatured?: boolean;
   categoryName?: string;
   selectedSizes?: string[];
+  language?: string; // ✅ NEW
 }
 
+/**
+ * Helper: apply translation fallback
+ */
+const applyTranslation = (product: any, language?: string) => {
+  if (!language || !product?.translations?.length) return product;
+
+  const t = product.translations[0];
+
+  return {
+    ...product,
+    name: t?.name ?? product.name,
+    description: t?.description ?? product.description,
+  };
+};
+
 export const createProduct = async (data: CreateProductInput) => {
-  const product = await prisma.product.create({ 
+  const { language = "en", ...rest } = data;
+
+  const product = await prisma.product.create({
     data: {
-      organizationId: data.organizationId,
-      name: data.name,
-      sku: data.sku,
-      description: data.description,
-      quantityOnHand: data.quantityOnHand,
-      costPrice: data.costPrice,
-      sellingPrice: data.sellingPrice,
-      lowStockThreshold: data.lowStockThreshold,
-      fileUrl: data.fileUrl,
-      isActive: data.isActive,
-      isFeatured: data.isFeatured,
-      categoryName: data.categoryName,
-      selectedSizes: data.selectedSizes
+      ...rest,
+      translations: {
+        create: {
+          language,
+          name: data.name,
+          description: data.description,
+        },
+      },
     },
   });
+
   return product;
 };
 
-export const getProductById = async (productId: number) => {
+export const getProductById = async (productId: number, language: string) => {
   const product = await prisma.product.findUnique({
     where: { productId },
+    include: {
+      translations: language
+        ? { where: { language }, take: 1 }
+        : false,
+    },
   });
-  return product;
+
+  return applyTranslation(product, language);
 };
 
 export const getProductBySkuForOrg = async (
   organizationId: number,
   sku: string,
+  language: string
 ) => {
   const product = await prisma.product.findUnique({
     where: {
@@ -72,83 +94,133 @@ export const getProductBySkuForOrg = async (
         sku,
       },
     },
+    include: {
+      translations: language
+        ? { where: { language }, take: 1 }
+        : false,
+    },
   });
-  return product;
+
+  return applyTranslation(product, language);
 };
 
-
-
-export const getProductBySku = async (sku: string) => {
+export const getProductBySku = async (sku: string, language: string) => {
   const product = await prisma.product.findFirst({
     where: { sku },
+    include: {
+      translations: language
+        ? { where: { language }, take: 1 }
+        : false,
+    },
   });
-  return product;
+
+  return applyTranslation(product, language);
 };
 
-export const listProductsForOrg = async (organizationId: number, paginationConfig: PaginationValues) => {
+export const listProductsForOrg = async (
+  organizationId: number,
+  paginationConfig: PaginationValues,
+  language: string
+) => {
   const { skip, pageSize } = paginationConfig;
+
   const products = await prisma.product.findMany({
     where: { organizationId },
     orderBy: { createdAt: "desc" },
     skip,
     take: pageSize,
+    include: {
+      translations: language
+        ? { where: { language }, take: 1 }
+        : false,
+    },
   });
+
   const total = await prisma.product.count({
     where: { organizationId },
   });
-  return { products, total };
+
+  return {
+    products: products.map((p) => applyTranslation(p, language)),
+    total,
+  };
 };
-
-
-
 
 export const fetchProductsBySkuOrName = async (
   organizationId: number,
   paginationConfig: PaginationValues,
-  searchValues: string
+  searchValues: string,
+  language: string
 ) => {
   const { skip, pageSize } = paginationConfig;
 
-  // Use an OR condition to match either name or sku
   const products: Product[] = await prisma.product.findMany({
     where: {
       organizationId,
       OR: [
-        { name: { contains: searchValues, mode: "insensitive" } }, // case-insensitive search for name
-        { sku: { contains: searchValues } }    // case-insensitive search for sku
+        { name: { contains: searchValues, mode: "insensitive" } },
+        { sku: { contains: searchValues } },
       ],
     },
     orderBy: { createdAt: "desc" },
     skip,
     take: pageSize,
-    distinct: ['productId'], // Ensure there are no duplicates based on the product's unique ID
+    distinct: ["productId"],
+    include: {
+      translations: language
+        ? { where: { language }, take: 1 }
+        : false,
+    },
   });
 
-  // Get the total number of matching records (without pagination applied)
   const total = await prisma.product.count({
     where: {
       organizationId,
       OR: [
         { name: { contains: searchValues, mode: "insensitive" } },
-        { sku: { contains: searchValues } }
+        { sku: { contains: searchValues } },
       ],
     },
   });
 
-  return { products, total };
+  return {
+    products: products.map((p) => applyTranslation(p, language)),
+    total,
+  };
 };
-
-
-
 
 export const updateProduct = async (
   productId: number,
-  data: UpdateProductInput,
+  data: UpdateProductInput
 ) => {
+  const { language = "en", ...rest } = data;
+
   const product = await prisma.product.update({
     where: { productId },
-    data,
+    data: {
+      ...rest,
+      translations: {
+        upsert: {
+          where: {
+            productId_language: {
+              productId,
+              language,
+            },
+          },
+          update: {
+            name: data.name,
+            description: data.description,
+          },
+          create: {
+            language,
+            name: data.name!,
+            description: data.description,
+          },
+        },
+      },
+    },
   });
+
   return product;
 };
 
@@ -158,5 +230,3 @@ export const deleteProductById = async (productId: number) => {
   });
   return product;
 };
-
-

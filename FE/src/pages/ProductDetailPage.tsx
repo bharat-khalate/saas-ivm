@@ -6,6 +6,7 @@ import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
 import { TEXT } from '../constants/text'
 import PageTitle from '../components/PageTitle'
+import i18n from '../i18n'
 
 export function ProductDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -16,25 +17,28 @@ export function ProductDetailPage() {
 
   useEffect(() => {
     if (!id) return
-    const productId = id
-
-    async function load() {
-      try {
-        const data = await productService.getProduct(productId)
-        setProduct(data)
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message ?? TEXT.products.detail.loadFailed)
-        } else {
-          setError(TEXT.products.detail.loadFailed)
-        }
-      } finally {
-        setLoading(false)
-      }
-    }
-
     load()
-  }, [id])
+  }, [id, i18n.language])
+
+
+
+  async function load(productId = id!) {
+    try {
+      const data = await productService.getProduct(productId)
+      setProduct(data)
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message ?? TEXT.products.detail.loadFailed)
+      } else {
+        setError(TEXT.products.detail.loadFailed)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+
+
 
   if (loading) {
     return (
@@ -117,7 +121,7 @@ export function ProductDetailPage() {
 
                   <p
                     className={`text-base font-semibold ${valueClassName} line-clamp-2`}
-                    title={product.name}   
+                    title={product.name}
                   >
                     {product.name}
                   </p>

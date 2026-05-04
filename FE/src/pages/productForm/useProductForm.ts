@@ -5,6 +5,7 @@ import type { Product } from '../../services/productService'
 import { categoryService, type Category } from '../../services/categoryService'
 import { showToast } from '../../components'
 import { TEXT } from '../../constants/text'
+import i18n from '../../i18n'
 
 type Params = {
   mode: 'create' | 'edit'
@@ -49,22 +50,27 @@ export function useProductForm({ mode, id, navigate }: Params) {
   useEffect(() => {
     if (mode !== 'edit' || !id) return
     const productId = id
-
-    async function load() {
-      setLoading(true)
-      try {
-        const data = await productService.getProduct(productId)
-        setProduct((prev) => ({
-          ...prev,
-          ...data,
-        }))
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    load()
+    load(productId)
   }, [id, mode])
+
+
+  useEffect(() => {
+    if (mode !== 'edit' || !id) return
+    load(id);
+  }, [i18n.language]);
+
+  async function load(productId: string) {
+    setLoading(true)
+    try {
+      const data = await productService.getProduct(productId)
+      setProduct((prev) => ({
+        ...prev,
+        ...data,
+      }))
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const initialValues: ProductFormValues = {
     ...product,

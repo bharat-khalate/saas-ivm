@@ -6,7 +6,7 @@ import { TEXT } from '../../constants/text'
 import { Formik } from 'formik'
 import { validateProduct } from '../../utils/inputValidation.util'
 import type { ProductFormValues } from './useProductForm'
-import PageTitle from '../../components/PageTitle'
+
 
 type Props = {
   mode: 'create' | 'edit'

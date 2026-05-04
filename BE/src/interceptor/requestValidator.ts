@@ -40,7 +40,7 @@ export function validateRequest(schema: ZodSchema) {
         },
       );
 
-      const messageArray = details.map((d) => `${d.field}: ${d.message}`);
+      const messageArray = details.map((d) => `${d.field}: ${req.t(d.message)}`);
 
       // Log a concise validation summary for debugging
       console.warn("Request validation failed:", {

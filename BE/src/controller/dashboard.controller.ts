@@ -2,13 +2,14 @@ import { Request, Response } from "express";
 import { sendSuccess, sendError } from "../utils/response.util.js";
 import { getPaginationValues, PaginationValues } from "../utils/pagination.helper.js";
 import { getDashBoardValues } from "../service/dashboard.service.js";
+import { TEXT } from "../constants/text.js";
 
 export const getDashboardController = async (req: Request, res: Response) => {
   try {
     const organizationId = (req as any).userId as number;
     const paginationConig: PaginationValues = getPaginationValues(req.query);
     const { lowStockItems, total, meta, totalQuantity } = await getDashBoardValues(organizationId, paginationConig);
-    return sendSuccess(res, 200, "Dashboard data fetched successfully", {
+    return sendSuccess(res, 200, req.t("dashboard.fetchStatsMessage"), {
       totalProducts: total,
       totalQuantity,
       lowStockItems,
@@ -16,7 +17,7 @@ export const getDashboardController = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("getDashboardController error", error);
-    return sendError(res, 500, "Internal server error", error);
+    return sendError(res, 500, req.t("common.commonErrorMessage"), req.t("dashboard.fetchStatsFailedMessage"));
   }
 };
 
