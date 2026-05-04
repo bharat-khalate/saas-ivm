@@ -1,0 +1,9 @@
+{
+    "scripts": {
+        "setup": "cd fe && npm i && cd ../be && npm i && npm run prisma:migrate",
+        "dev": "concurrently \"npm --prefix fe run dev\" \"npm --prefix be run dev\""
+    },
+    "devDependencies": {
+        "concurrently": "^9.2.1"
+    }
+}

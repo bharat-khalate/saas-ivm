@@ -1,11 +1,12 @@
-import express, { Request, Response } from "express";
 import cors from "cors";
-import userRoutes from "./routes/user.routes.js";
+import express, { Request, Response } from "express";
+import categoryRouter from "./routes/category.routes.js";
+import dashboardRoutes from "./routes/dashboard.routes.js";
 import productRoutes from "./routes/products.routes.js";
 import settingsRoutes from "./routes/settings.routes.js";
-import dashboardRoutes from "./routes/dashboard.routes.js";
-import categoryRouter from "./routes/category.route.js";
-import fileRouter from "./routes/file.routes.js";
+import userRoutes from "./routes/user.routes.js";
+import { PORT } from "./config/env.js";
+import { setupSwagger } from "./config/swagger.config.js";
 import { i18n, i18nextMiddleware } from './i18n/index.js'
 
 
@@ -13,15 +14,8 @@ import { i18n, i18nextMiddleware } from './i18n/index.js'
 const app = express();
 app.use(express.json());
 app.use(cors());
-
-
-// const upload = multer({ dest: "uploads/" });
-
-// app.post("/upload", upload.single("file"), (req, res) => {
-//   console.log(req.file);
-//   res.send("File uploaded");
-// });
 app.use(i18nextMiddleware.handle(i18n));
+setupSwagger(app);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/settings", settingsRoutes);
@@ -29,16 +23,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/categories", categoryRouter);
 app.use("/api/files", express.static("uploads"));
 
-
-
-
-
-
-
-
-
-
-const port = Number(process.env.PORT) || 5000;
+const port = PORT;
 
 app.get("/", (req: Request, res: Response) => {
   res.json({

@@ -6,6 +6,12 @@ import { TEXT } from "../constants/text.js";
 
 
 
+/**
+ * Returns all categories.
+ * @param {Request} req - Express request.
+ * @param {Response} res - Express response.
+ * @returns {Promise<Response>} JSON response with categories.
+ */
 export const listCategory = async (req: Request, res: Response) => {
     try {
         const categories = await getAllCategories();;
@@ -22,6 +28,12 @@ export const listCategory = async (req: Request, res: Response) => {
 }
 
 
+/**
+ * Creates a new category.
+ * @param {Request} req - Express request containing category name.
+ * @param {Response} res - Express response.
+ * @returns {Promise<Response>} JSON response with created category.
+ */
 export const insertCategory = async (req: Request, res: Response) => {
     try {
         validator.string().parse(req.body.category);

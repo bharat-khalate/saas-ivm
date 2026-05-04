@@ -14,10 +14,6 @@ import {
   LOW_STOCK_NEGATIVE,
   INVALID_SIZE
 } from "../config/global.config.js";
-
-
-
-
 export const ProductSchema = z.object({
   productId: z.preprocess(toInt, validator.optionalNumber(INVALID_PRODUCT_ID)),
 
@@ -85,14 +81,4 @@ export const ProductSchema = z.object({
     .optional()
     .default([]),
 });
-
-// For updates, all fields are optional; product id comes from the route param.
 export const UpdateProductSchema = ProductSchema.partial();
-
-// Example usage
-// const parsed = ProductSchema.parse(req.body);
-
-//Invalid {input} passed
-// Name, SKU
-
-//{field} must have numeric value

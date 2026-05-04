@@ -16,6 +16,7 @@ model User {
   organisationName String    @map("organisation_name")
   products         Product[]
   settings         Settings?
+  @@map("users")
 }
 
 model Product {
@@ -38,10 +39,11 @@ model Product {
   fileUrl       String   @default("\\dummyfile") @map("file_url")
   selectedSizes Json     @default("[]") @map("selected_sizes")
 
-  translations ProductTranslation[]   // ✅ ADD THIS
+  translations ProductTranslation[]   
 
   @@unique([organizationId, sku])
   @@index([organizationId])
+  @@map("products")
 }
 
 
@@ -56,12 +58,14 @@ model ProductTranslation {
   product Product @relation(fields: [productId], references: [productId], onDelete: Cascade)
 
   @@unique([productId, language])
+  @@map("product_translation")
 }
 
 model Category {
   categoryId Int       @id @default(autoincrement()) @map("category_id")
   category   String    @unique
   product    Product[]
+  @@map("category")
 }
 
 model Settings {
@@ -69,4 +73,5 @@ model Settings {
   organizationId           Int  @unique @map("organization_id")
   defaultLowStockThreshold Int? @map("default_low_stock_threshold")
   organization User @relation(fields: [organizationId], references: [userId])
+  @@map("settings")
 }

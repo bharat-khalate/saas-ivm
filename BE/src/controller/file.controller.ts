@@ -6,6 +6,12 @@ import { getUserFile } from "../service/file.service.js";
 import { TEXT } from "../constants/text.js";
 
 
+/**
+ * Serves a previously uploaded file for the authenticated user.
+ * @param {Request} req - Express request with filename and auth context.
+ * @param {Response} res - Express response.
+ * @returns {Promise<Response>} File content response.
+ */
 export const serveFileController = async (req: Request, res: Response) => {
     try {
         const fileName = path.basename(req.params.filename);

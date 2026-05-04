@@ -5,7 +5,12 @@ import {
 } from "../service/settings.service.js";
 import { sendSuccess, sendError } from "../utils/response.util.js";
 
-
+/**
+ * Fetches settings for authenticated organization, creating defaults if missing.
+ * @param {Request} req - Express request for authenticated user context.
+ * @param {Response} res - Express response.
+ * @returns {Promise<Response>} JSON response with settings.
+ */
 export const getSettingsController = async (req: Request, res: Response) => {
   try {
     const organizationId = (req as any).userId as number;
@@ -26,6 +31,12 @@ export const getSettingsController = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Updates organization settings for authenticated user.
+ * @param {Request} req - Express request with settings payload.
+ * @param {Response} res - Express response.
+ * @returns {Promise<Response>} JSON response with updated settings.
+ */
 export const updateSettingsController = async (
   req: Request,
   res: Response,
