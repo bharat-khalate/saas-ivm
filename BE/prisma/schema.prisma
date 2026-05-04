@@ -16,6 +16,7 @@ model User {
   organisationName String    @map("organisation_name")
   products         Product[]
   settings         Settings?
+  @@map("users")
 }
 
 model Product {
@@ -39,12 +40,14 @@ model Product {
   selectedSizes Json     @default("[]")@map("selected_sizes")
   @@unique([organizationId, sku])
   @@index([organizationId])
+  @@map("products")
 }
 
 model Category {
   categoryId Int       @id @default(autoincrement()) @map("category_id")
   category   String    @unique
   product    Product[]
+  @@map("category")
 }
 
 model Settings {
@@ -52,4 +55,5 @@ model Settings {
   organizationId           Int  @unique @map("organization_id")
   defaultLowStockThreshold Int? @map("default_low_stock_threshold")
   organization User @relation(fields: [organizationId], references: [userId])
+  @@map("settings")
 }
