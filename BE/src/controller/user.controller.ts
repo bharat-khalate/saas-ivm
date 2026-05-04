@@ -9,6 +9,11 @@ import {
 import { signJwt, verifyJwtIgnoreExpiration } from "../utils/jwt.util.js";
 import { hashPassword, comparePassword } from "../utils/password.util.js";
 import { sendSuccess, sendError } from "../utils/response.util.js";
+/**
+ * Removes sensitive fields before returning user payloads.
+ * @param {any} user - User object that may include sensitive fields.
+ * @returns {any} User object without password field.
+ */
 const toSafeUser = (user: any) => {
   if (!user) return user;
   // remove password field from response
@@ -17,6 +22,12 @@ const toSafeUser = (user: any) => {
   return rest;
 };
 
+/**
+ * Registers a new user and returns an auth token.
+ * @param {Request} req - Express request containing registration payload.
+ * @param {Response} res - Express response.
+ * @returns {Promise<Response>} JSON response with user and token.
+ */
 export const registerUserController = async (req: Request, res: Response) => {
   try {
     const { email, password, organisationName } = req.body;
@@ -52,6 +63,12 @@ export const registerUserController = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Authenticates a user using email/password and returns token.
+ * @param {Request} req - Express request containing login payload.
+ * @param {Response} res - Express response.
+ * @returns {Promise<Response>} JSON response with user and token.
+ */
 export const loginUserController = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -81,6 +98,12 @@ export const loginUserController = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Issues a fresh token from an existing bearer token.
+ * @param {Request} req - Express request with bearer token header.
+ * @param {Response} res - Express response.
+ * @returns {Promise<Response>} JSON response with refreshed token.
+ */
 export const refreshTokenController = async (req: Request, res: Response) => {
   try {
     const authHeader = req.headers.authorization;
@@ -102,6 +125,12 @@ export const refreshTokenController = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Returns one user by numeric identifier.
+ * @param {Request} req - Express request with user id path param.
+ * @param {Response} res - Express response.
+ * @returns {Promise<Response>} JSON response with user data.
+ */
 export const getUserByIdController = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
@@ -121,6 +150,12 @@ export const getUserByIdController = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Returns all users.
+ * @param {Request} _req - Express request (unused).
+ * @param {Response} res - Express response.
+ * @returns {Promise<Response>} JSON response with user list.
+ */
 export const listUsersController = async (_req: Request, res: Response) => {
   try {
     const users = await listUsers();
@@ -136,6 +171,12 @@ export const listUsersController = async (_req: Request, res: Response) => {
   }
 };
 
+/**
+ * Deletes one user by numeric identifier.
+ * @param {Request} req - Express request with user id path param.
+ * @param {Response} res - Express response.
+ * @returns {Promise<Response>} JSON response confirming deletion.
+ */
 export const deleteUserController = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);

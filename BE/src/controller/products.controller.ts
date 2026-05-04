@@ -11,6 +11,12 @@ import {
 import { sendSuccess, sendError } from "../utils/response.util.js";
 import { getPaginationValues, PaginationValues } from "../utils/pagination.helper.js";
 
+/**
+ * Creates a product for the current organization.
+ * @param {Request} req - Express request containing product payload.
+ * @param {Response} res - Express response.
+ * @returns {Promise<Response>} JSON response with created product.
+ */
 export const createProductController = async (req: Request, res: Response) => {
   try {
     const {
@@ -67,6 +73,12 @@ export const createProductController = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Returns one product by id.
+ * @param {Request} req - Express request with product id path param.
+ * @param {Response} res - Express response.
+ * @returns {Promise<Response>} JSON response with product data.
+ */
 export const getProductByIdController = async (
   req: Request,
   res: Response,
@@ -91,6 +103,12 @@ export const getProductByIdController = async (
   }
 };
 
+/**
+ * Returns paginated products for an organization.
+ * @param {Request} req - Express request with organization id and pagination query.
+ * @param {Response} res - Express response.
+ * @returns {Promise<Response>} JSON response with product list and meta.
+ */
 export const listProductsForOrgController = async (
   req: Request,
   res: Response,
@@ -118,6 +136,12 @@ export const listProductsForOrgController = async (
 
 
 
+/**
+ * Returns paginated products filtered by sku or name.
+ * @param {Request} req - Express request with search and pagination params.
+ * @param {Response} res - Express response.
+ * @returns {Promise<Response>} JSON response with filtered products and meta.
+ */
 export const listProductsBySkuOrName = async (
   req: Request,
   res: Response,
@@ -145,6 +169,12 @@ export const listProductsBySkuOrName = async (
   }
 };
 
+/**
+ * Updates a product by id.
+ * @param {Request} req - Express request with product id and fields to update.
+ * @param {Response} res - Express response.
+ * @returns {Promise<Response>} JSON response with updated product.
+ */
 export const updateProductController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -192,6 +222,12 @@ export const updateProductController = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Deletes a product by id.
+ * @param {Request} req - Express request with product id path param.
+ * @param {Response} res - Express response.
+ * @returns {Promise<Response>} JSON response confirming deletion.
+ */
 export const deleteProductController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;

@@ -7,6 +7,12 @@ import { Product } from "../../generated/prisma/index.js";
 
 
 
+/**
+ * Builds dashboard totals and low-stock listing payload.
+ * @param {number} organizationId - Organization identifier.
+ * @param {PaginationValues} paginationConfig - Pagination configuration.
+ * @returns {Promise<{ lowStockItems: Product[]; total: number; meta: { total: number; page: number; pageSize: number; totalPages: number }; totalQuantity: number }>} Dashboard data.
+ */
 export const getDashBoardValues = async (organizationId: number, paginationConfig: PaginationValues) => {
     const overAllQuantity = await prisma.product.aggregate({
         where: { organizationId },
@@ -20,6 +26,12 @@ export const getDashBoardValues = async (organizationId: number, paginationConfi
 }
 
 
+/**
+ * Returns paginated low-stock products for organization.
+ * @param {number} organizationId - Organization identifier.
+ * @param {PaginationValues} paginationConfig - Pagination configuration.
+ * @returns {Promise<{ lowStockItems: Product[]; total: number; meta: { total: number; page: number; pageSize: number; totalPages: number } }>} Low-stock list with meta.
+ */
 export const lowStockItemsForOrg = async (organizationId: number, paginationConfig: PaginationValues) => {
     const settings = await getOrCreateSettingsForOrg(organizationId);
     const defaultThreshold = settings.defaultLowStockThreshold ?? 5;
@@ -46,6 +58,11 @@ export const lowStockItemsForOrg = async (organizationId: number, paginationConf
 }
 
 
+/**
+ * Returns count of products for organization.
+ * @param {number} organizationId - Organization identifier.
+ * @returns {Promise<number>} Total product count.
+ */
 export const getTotalProductsForOrg = async (organizationId: number) => {
     return prisma.product.count({
         where: { organizationId },

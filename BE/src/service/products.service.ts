@@ -33,6 +33,11 @@ export interface UpdateProductInput {
   selectedSizes?: string[];
 }
 
+/**
+ * Creates a new product record.
+ * @param {CreateProductInput} data - Product create payload.
+ * @returns {Promise<Product>} Created product.
+ */
 export const createProduct = async (data: CreateProductInput) => {
   const product = await prisma.product.create({ 
     data: {
@@ -54,6 +59,11 @@ export const createProduct = async (data: CreateProductInput) => {
   return product;
 };
 
+/**
+ * Finds one product by product id.
+ * @param {number} productId - Product identifier.
+ * @returns {Promise<Product | null>} Product or null.
+ */
 export const getProductById = async (productId: number) => {
   const product = await prisma.product.findUnique({
     where: { productId },
@@ -61,6 +71,12 @@ export const getProductById = async (productId: number) => {
   return product;
 };
 
+/**
+ * Finds product by composite organization + sku key.
+ * @param {number} organizationId - Organization identifier.
+ * @param {string} sku - Product sku.
+ * @returns {Promise<Product | null>} Product or null.
+ */
 export const getProductBySkuForOrg = async (
   organizationId: number,
   sku: string,
@@ -78,6 +94,11 @@ export const getProductBySkuForOrg = async (
 
 
 
+/**
+ * Finds one product by sku.
+ * @param {string} sku - Product sku.
+ * @returns {Promise<Product | null>} Product or null.
+ */
 export const getProductBySku = async (sku: string) => {
   const product = await prisma.product.findFirst({
     where: { sku },
@@ -85,6 +106,12 @@ export const getProductBySku = async (sku: string) => {
   return product;
 };
 
+/**
+ * Returns paginated products for an organization.
+ * @param {number} organizationId - Organization identifier.
+ * @param {PaginationValues} paginationConfig - Pagination configuration.
+ * @returns {Promise<{ products: Product[]; total: number }>} Paginated products and total count.
+ */
 export const listProductsForOrg = async (organizationId: number, paginationConfig: PaginationValues) => {
   const { skip, pageSize } = paginationConfig;
   const products = await prisma.product.findMany({
@@ -102,6 +129,13 @@ export const listProductsForOrg = async (organizationId: number, paginationConfi
 
 
 
+/**
+ * Returns paginated products filtered by sku or name.
+ * @param {number} organizationId - Organization identifier.
+ * @param {PaginationValues} paginationConfig - Pagination configuration.
+ * @param {string} searchValues - Search text for name/sku.
+ * @returns {Promise<{ products: Product[]; total: number }>} Filtered products and total count.
+ */
 export const fetchProductsBySkuOrName = async (
   organizationId: number,
   paginationConfig: PaginationValues,
@@ -141,6 +175,12 @@ export const fetchProductsBySkuOrName = async (
 
 
 
+/**
+ * Updates product fields by id.
+ * @param {number} productId - Product identifier.
+ * @param {UpdateProductInput} data - Partial product fields to update.
+ * @returns {Promise<Product>} Updated product.
+ */
 export const updateProduct = async (
   productId: number,
   data: UpdateProductInput,
@@ -152,6 +192,11 @@ export const updateProduct = async (
   return product;
 };
 
+/**
+ * Deletes one product by id.
+ * @param {number} productId - Product identifier.
+ * @returns {Promise<Product>} Deleted product.
+ */
 export const deleteProductById = async (productId: number) => {
   const product = await prisma.product.delete({
     where: { productId },

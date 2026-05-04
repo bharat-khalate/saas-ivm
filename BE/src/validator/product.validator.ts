@@ -2,21 +2,18 @@ import { z } from "zod";
 import { validator } from "./data.validator.js"
 import { toArray, toBoolean, toDate, toFloat, toInt } from "../utils/convereter.util.js";
 import {
-    INVALID_PRODUCT_ID,
-    INVALID_ORGANIZATION_ID,
-    PRODUCT_NAME_MIN_LENGTH,
-    PRODUCT_NAME_NO_NUMBERS,
-    SKU_NUMERIC_ONLY,
-    DESCRIPTION_MAX_LENGTH,
-    QUANTITY_NEGATIVE,
-    COST_PRICE_NEGATIVE,
-    SELLING_PRICE_NEGATIVE,
-    LOW_STOCK_NEGATIVE,
-    INVALID_SIZE
+  INVALID_PRODUCT_ID,
+  INVALID_ORGANIZATION_ID,
+  PRODUCT_NAME_MIN_LENGTH,
+  PRODUCT_NAME_NO_NUMBERS,
+  SKU_NUMERIC_ONLY,
+  DESCRIPTION_MAX_LENGTH,
+  QUANTITY_NEGATIVE,
+  COST_PRICE_NEGATIVE,
+  SELLING_PRICE_NEGATIVE,
+  LOW_STOCK_NEGATIVE,
+  INVALID_SIZE
 } from "../config/global.config.js";
-
-
-
 export const ProductSchema = z.object({
   productId: z.preprocess(toInt, validator.optionalNumber(INVALID_PRODUCT_ID)),
 
@@ -84,14 +81,4 @@ export const ProductSchema = z.object({
     .optional()
     .default([]),
 });
-
-// For updates, all fields are optional; product id comes from the route param.
 export const UpdateProductSchema = ProductSchema.partial();
-
-// Example usage
-// const parsed = ProductSchema.parse(req.body);
-
-//Invalid {input} passed
-// Name, SKU
-
-//{field} must have numeric value

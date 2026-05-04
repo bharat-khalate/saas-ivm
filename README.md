@@ -126,6 +126,18 @@ Health check:
 
 - `GET /` -> `StockFlow API is running`
 
+## API Documentation (Swagger)
+
+Swagger UI is enabled in backend and available at:
+
+- `http://localhost:5000/api-docs`
+
+Notes:
+
+- Route docs are defined with JSDoc `@swagger` comments in `BE/src/routes/*.routes.ts`.
+- Swagger base server URL is configured in `BE/src/config/swagger.config.ts`.
+- In production, swagger scans built route files in `dist/routes/*.routes.js`.
+
 ## Database
 
 - Prisma schema: `BE/prisma/schema.prisma`
