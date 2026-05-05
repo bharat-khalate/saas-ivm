@@ -1,11 +1,12 @@
 # StockFlow
 
-StockFlow is a full-stack inventory and stock management application with a React frontend and an Express + Prisma backend.
+StockFlow is a full-stack inventory and stock management application with a React frontend and an Express + Prisma backend.  
+The project includes multilingual support (frontend i18n + backend l10n), JWT auth with refresh flow, and Prisma migration/seeding support.
 
 ## Tech Stack
 
-- Frontend: React, TypeScript, Vite, Redux Toolkit, Axios, Tailwind CSS
-- Backend: Node.js, Express, TypeScript, Prisma ORM, PostgreSQL, JWT auth
+- Frontend: React, TypeScript, Vite, Redux Toolkit, Axios, Tailwind CSS, i18next, react-i18next
+- Backend: Node.js, Express, TypeScript, Prisma ORM, PostgreSQL, JWT auth, i18next, i18next-http-middleware
 
 ## Project Structure
 
@@ -13,7 +14,7 @@ StockFlow is a full-stack inventory and stock management application with a Reac
 StockFlow/
   FE/                 # Frontend (Vite + React)
   BE/                 # Backend API (Express + Prisma)
-  package.json        # Root scripts to run FE and BE together
+  package.json        # Root scripts for combined setup/run
 ```
 
 ## Prerequisites
@@ -26,7 +27,7 @@ StockFlow/
 
 ### Backend (`BE/.env`)
 
-Create `BE/.env` (you can start from `BE/.example.env`):
+Create `BE/.env` (you can copy values from `BE/.example.env`):
 
 ```env
 DATABASE_URL=postgresql://username:password@localhost:5432/database_name?schema=public
@@ -45,29 +46,59 @@ VITE_API_BASE=http://localhost:5000/api
 
 ## Setup
 
-From the project root:
+### 1) Root commands (recommended start)
+
+Run from project root:
 
 ```bash
-npm install
+npm run bootstrap
 ```
 
-Install frontend and backend dependencies:
+- Installs FE + BE dependencies
+- Runs backend migration
+- Seeds initial data
+
+Or run everything and start dev servers:
 
 ```bash
-cd FE && npm install
-cd ../BE && npm install
+npm run bootstrap-run
 ```
 
-Run backend migrations:
+### 2) Backend setup (for debug purpose)
+
+Use this when you want to debug backend independently.
 
 ```bash
 cd BE
+npm install
 npm run prisma:migrate
+npm run prisma:seed
+npm run dev
 ```
+
+Backend API default: `http://localhost:5000/api`
+
+### 3) Frontend setup (for debug purpose)
+
+Use this when you want to debug frontend independently.
+
+```bash
+cd FE
+npm install
+npm run dev
+```
+
+Frontend default: `http://localhost:5173`
 
 ## Run in Development
 
-### Option 1: Run services separately (recommended on case-sensitive environments)
+### Run both services from root
+
+```bash
+npm run dev
+```
+
+### Run services separately
 
 Backend:
 
@@ -83,17 +114,9 @@ cd FE
 npm run dev
 ```
 
-### Option 2: Run both from root
-
-```bash
-npm run dev
-```
-
-Note: root scripts currently reference `fe` / `be`. On case-sensitive systems, update them to `FE` / `BE` in root `package.json`.
-
 ## Build and Start
 
-Backend build:
+### Backend
 
 ```bash
 cd BE
@@ -101,7 +124,7 @@ npm run build
 npm run start
 ```
 
-Frontend build:
+### Frontend
 
 ```bash
 cd FE
@@ -128,28 +151,46 @@ Health check:
 
 ## API Documentation (Swagger)
 
-Swagger UI is enabled in backend and available at:
+Swagger UI:
 
 - `http://localhost:5000/api-docs`
 
 Notes:
 
-- Route docs are defined with JSDoc `@swagger` comments in `BE/src/routes/*.routes.ts`.
-- Swagger base server URL is configured in `BE/src/config/swagger.config.ts`.
-- In production, swagger scans built route files in `dist/routes/*.routes.js`.
+- Route docs are defined with JSDoc `@swagger` comments in `BE/src/routes/*.routes.ts`
+- Swagger config is in `BE/src/config/swagger.config.ts`
+- Production scan target: `dist/routes/*.routes.js`
 
 ## Database
 
 - Prisma schema: `BE/prisma/schema.prisma`
 - Migrations: `BE/prisma/migrations/`
-- Migration command: `npm run prisma:migrate` (inside `BE`)
+- Migrate: `cd BE && npm run prisma:migrate`
+- Seed: `cd BE && npm run prisma:seed`
+
+## Localization
+
+### Frontend i18n
+
+- Setup: `FE/src/i18n/index.ts`
+- Locale files: `FE/src/i18n/en.json`, `FE/src/i18n/hi.json`
+- Loaded in: `FE/src/main.tsx`
+- UI language switch is wired in app-level UI
+
+### Backend l10n
+
+- Setup: `BE/src/i18n/index.ts`
+- Locale files: `BE/src/i18n/en.json`, `BE/src/i18n/hi.json`
+- Middleware mounted in: `BE/src/index.ts`
+- Language can be passed through `Accept-Language` header
 
 ## Available Scripts
 
 ### Root
 
-- `npm run setup`: install FE and BE dependencies, then run backend migration
-- `npm run dev`: run FE and BE together using concurrently
+- `npm run bootstrap`
+- `npm run bootstrap-run`
+- `npm run dev`
 
 ### Backend (`BE`)
 
@@ -158,6 +199,7 @@ Notes:
 - `npm run start`
 - `npm run prisma:generate`
 - `npm run prisma:migrate`
+- `npm run prisma:seed`
 
 ### Frontend (`FE`)
 

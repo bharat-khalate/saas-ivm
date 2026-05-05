@@ -131,6 +131,17 @@
                 "emailValid": "Email must be valid",
                 "passwordRequired": "Password is required",
                 "passwordLen": "Password must be greater than 5 characters"
+            },
+            "marketing": {
+                "headline": "Manage Your Inventory",
+                "body": "Keep an eye on low-stock items",
+                "bullets": [
+                    "Smart Management",
+                    "Low Stock Alert",
+                    "One Platform"
+                ],
+                "badge1": "Highest Uptime",
+                "badge2": "Best support"
             }
         }
     }

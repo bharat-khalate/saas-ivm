@@ -1,7 +1,8 @@
 {
     "scripts": {
-        "setup": "cd fe && npm i && cd ../be && npm i && npm run prisma:migrate",
-        "dev": "concurrently \"npm --prefix fe run dev\" \"npm --prefix be run dev\""
+        "bootstrap": "cd fe && npm i && cd ../be && npm i && npm run prisma:migrate && npm run prisma:seed",
+        "dev": "concurrently \"npm --prefix fe run dev\" \"npm --prefix be run dev\"",
+        "bootstrap-run": "npm run bootstrap && npm run dev"
     },
     "devDependencies": {
         "concurrently": "^9.2.1"

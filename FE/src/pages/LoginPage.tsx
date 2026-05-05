@@ -141,15 +141,15 @@ export function LoginPage() {
             <ul className="mb-6 flex flex-col gap-1.5 text-sm text-slate-800 dark:text-slate-200">
               <li className="flex items-start">
                 <span className="mr-2 text-sky-400">•</span>
-                <span>{t("authPages.login.marketing.bullets[0]")}</span>
+                <span>{(t("authPages.login.marketing.bullets", { returnObjects: true })as string[])[0]}</span>
               </li>
               <li className="flex items-start">
                 <span className="mr-2 text-sky-400">•</span>
-                <span>{t("authPages.login.marketing.bullets[1]")}</span>
+                <span>{(t("authPages.login.marketing.bullets", { returnObjects: true })as string[])[1]}</span>
               </li>
               <li className="flex items-start">
                 <span className="mr-2 text-sky-400">•</span>
-                <span>{t("authPages.login.marketing.bullets[2]")}</span>
+                <span>{(t("authPages.login.marketing.bullets", { returnObjects: true })as string[])[2]}</span>
               </li>
             </ul>
             <div className="flex flex-wrap gap-2">
