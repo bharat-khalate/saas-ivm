@@ -51,6 +51,7 @@ VITE_API_BASE=http://localhost:5000/api
 Run from project root:
 
 ```bash
+npm i
 npm run bootstrap
 ```
 
