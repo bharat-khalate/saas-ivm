@@ -15,17 +15,19 @@
     "prisma:migrate": "prisma migrate deploy",
     "prisma:seed": "npx prisma db seed"
   },
-  "prisma":{
+  "prisma": {
     "seed": "tsx src/db/seed.ts"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
+    "@types/ioredis": "^4.28.10",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/mime-types": "^3.0.1",
     "@types/multer": "^2.1.0",
     "@types/node": "^25.6.0",
+    "@types/node-cron": "^3.0.11",
     "@types/pg": "^8.20.0",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
@@ -35,6 +37,7 @@
   "dependencies": {
     "@prisma/client": "5.19.1",
     "bcrypt": "^5.1.1",
+    "bullmq": "^5.76.5",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
@@ -42,9 +45,11 @@
     "i18next-browser-languagedetector": "^8.2.1",
     "i18next-fs-backend": "^2.6.1",
     "i18next-http-middleware": "^3.9.2",
+    "ioredis": "^5.10.1",
     "jsonwebtoken": "^9.0.2",
     "mime-type": "^5.0.3",
     "multer": "^2.1.1",
+    "node-cron": "^4.2.1",
     "pg": "^8.20.0",
     "prisma": "5.19.1",
     "react-i18next": "^16.5.8",

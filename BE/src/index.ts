@@ -8,12 +8,15 @@ import userRoutes from "./routes/user.routes.js";
 import { PORT } from "./config/env.js";
 import { setupSwagger } from "./config/swagger.config.js";
 import { i18n, i18nextMiddleware } from './i18n/index.js'
-
+import { initializeWorkers } from "./worker/index.js";
+import { initializeCronJobs } from "./jobs/index.js";
 
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+initializeWorkers();
+initializeCronJobs();
 app.use(i18nextMiddleware.handle(i18n));
 setupSwagger(app);
 app.use("/api/users", userRoutes);

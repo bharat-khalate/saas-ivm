@@ -16,7 +16,7 @@ export interface CreateProductInput {
   isFeatured: boolean;
   categoryName: string;
   selectedSizes: string[];
-  language?: string; 
+  language?: string;
 }
 
 export interface UpdateProductInput {
@@ -32,7 +32,7 @@ export interface UpdateProductInput {
   isFeatured?: boolean;
   categoryName?: string;
   selectedSizes?: string[];
-  language?: string; 
+  language?: string;
 }
 
 /**
@@ -163,10 +163,44 @@ export const listProductsForOrg = async (
     total,
   };
 };
+/**
+ * function that fetches all the low stock products
+ * @returns {Promise<{User,Product}[]>}
+ */
+export const getLowStockProducts = async () => {
+  const products: Product[] = await prisma.$queryRaw`
+    SELECT * FROM products
+    WHERE is_active = true
+    AND low_stock_threshold IS NOT NULL
+    AND quantity_on_hand <= low_stock_threshold
+  `;
 
+  const grouped = products.reduce((acc, product) => {
+    const orgId = product.organizationId;
 
+    if (!acc[orgId]) {
+      acc[orgId] = [];
+    }
 
+    acc[orgId].push(product);
+    return acc;
+  }, {} as Record<number, Product[]>);
 
+  const result = await Promise.all(
+    Object.entries(grouped).map(async ([orgId, products]) => {
+      const user = await prisma.user.findUnique({
+        where: { userId: Number(orgId) },
+      });
+
+      return {
+        user,
+        products,
+      };
+    })
+  );
+
+  return result;
+};
 /**
  * Returns paginated products filtered by sku or name.
  * @param {number} organizationId - Organization identifier.
@@ -200,7 +234,7 @@ export const fetchProductsBySkuOrName = async (
         : false,
     },
   });
- const total = await prisma.product.count({
+  const total = await prisma.product.count({
     where: {
       organizationId,
       OR: [
