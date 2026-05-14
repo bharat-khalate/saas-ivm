@@ -7,7 +7,7 @@ export const notificationQueue = new Queue('notification-queue', {
 })
 
 export const sendNotification = async (data: any) => {
-    console.log("cron created");
+    console.info("adding job to queue:")
     await notificationQueue.add('send-notification', data, {
         attempts: 3,
         backoff: {

@@ -85,8 +85,8 @@ async function main() {
                         },
                         {
                             language: "hi",
-                            name: `हिंदी ${p.name}`,
-                            description: `हिंदी विवरण ${p.name}`,
+                            name: `उत्पाद ${p.name.slice(7, p.name.length)}`,
+                            description: `उत्पाद विवरण ${p.name.slice(7, p.name.length)}`,
                         },
                     ],
                 },

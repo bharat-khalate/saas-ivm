@@ -1,4 +1,4 @@
-import { Product } from "../../generated/prisma/index.js";
+import { Product, User } from "../../generated/prisma/index.js";
 import { prisma } from "../db/dbConfig.js";
 import { PaginationValues } from "../utils/pagination.helper.js";
 
@@ -34,6 +34,12 @@ export interface UpdateProductInput {
   selectedSizes?: string[];
   language?: string;
 }
+interface ILowStockProduct extends Omit<Product, "description" | "costPrice" | "sellingPrice" | "fileUrl" | "isActive" | "isFeatured" | "categoryName" | "selectedSizes" | "language"> { }
+interface ILowStockNotificationData {
+  user: Omit<User, "password">;
+  products: ILowStockProduct[]
+}
+
 
 /**
  * Creates a new product record.
@@ -168,39 +174,35 @@ export const listProductsForOrg = async (
  * @returns {Promise<{User,Product}[]>}
  */
 export const getLowStockProducts = async () => {
-  const products: Product[] = await prisma.$queryRaw`
-    SELECT * FROM products
-    WHERE is_active = true
-    AND low_stock_threshold IS NOT NULL
-    AND quantity_on_hand <= low_stock_threshold
-  `;
+ const notificationData = await prisma.$queryRaw<
+  ILowStockNotificationData[]
+>`
+  SELECT 
+    JSON_BUILD_OBJECT(
+        'userId', u.user_id,
+        'email', u.email,
+        'organisationName', u.organisation_name
+    ) AS user,
+    JSON_AGG(
+        JSON_BUILD_OBJECT(
+            'productId', p.product_id,
+            'name', p.name,
+            'sku', p.sku,
+            'quantityOnHand', p.quantity_on_hand,
+            'threshold', COALESCE(p.low_stock_threshold, s.default_low_stock_threshold)
+        )
+    ) AS products
+  FROM products p
+  JOIN users u ON p.organization_id = u.user_id
+  LEFT JOIN settings s ON s.organization_id = p.organization_id
+  WHERE p.is_active = true
+    AND COALESCE(p.low_stock_threshold, s.default_low_stock_threshold) IS NOT NULL
+    AND p.quantity_on_hand <= COALESCE(p.low_stock_threshold, s.default_low_stock_threshold)
+  GROUP BY u.user_id, u.email, u.organisation_name;
+`;
+return notificationData;
+}
 
-  const grouped = products.reduce((acc, product) => {
-    const orgId = product.organizationId;
-
-    if (!acc[orgId]) {
-      acc[orgId] = [];
-    }
-
-    acc[orgId].push(product);
-    return acc;
-  }, {} as Record<number, Product[]>);
-
-  const result = await Promise.all(
-    Object.entries(grouped).map(async ([orgId, products]) => {
-      const user = await prisma.user.findUnique({
-        where: { userId: Number(orgId) },
-      });
-
-      return {
-        user,
-        products,
-      };
-    })
-  );
-
-  return result;
-};
 /**
  * Returns paginated products filtered by sku or name.
  * @param {number} organizationId - Organization identifier.
