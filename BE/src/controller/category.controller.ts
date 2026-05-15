@@ -14,7 +14,7 @@ import { TEXT } from "../constants/text.js";
  */
 export const listCategory = async (req: Request, res: Response) => {
     try {
-        const categories = await getAllCategories();;
+        const categories = await getAllCategories();
         return sendSuccess(
             res,
             200,

@@ -8,7 +8,7 @@ import {
   refreshTokenController,
 } from "../controller/user.controller.js";
 import { authMiddleware } from "../utils/auth.middleware.js";
-import { validateRequest } from "../interceptor/requestValidator.js";
+import { validateRequest } from "../midddleware/requestValidator.js";
 import { LoginSchema, RegisterSchema } from "../validator/user.validator.js";
 
 const router = Router();

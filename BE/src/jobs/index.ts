@@ -1,3 +1,4 @@
+import { notificationLogger } from "../logger/logger.js";
 import { createNotificationJob } from "./notification.cron.job.js";
 
 interface ICronJobs {
@@ -7,9 +8,13 @@ export const cronJobs: ICronJobs = {
 
     notiFicationJob: async () => {
         try {
+            notificationLogger.info("Job Initializer: creating notification cron job")
             return createNotificationJob();
         } catch (error: any) {
-            console.error("Cron failed:", error);
+            notificationLogger.error("Job Initializer: Cron creation failed:", {
+                error: error.message,
+                trace: error.stack
+            });
         }
     },
 

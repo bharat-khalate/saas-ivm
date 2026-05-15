@@ -10,6 +10,7 @@ import { setupSwagger } from "./config/swagger.config.js";
 import { i18n, i18nextMiddleware } from './i18n/index.js'
 import { initializeWorkers } from "./worker/index.js";
 import { initializeCronJobs } from "./jobs/index.js";
+import { requestContextMiddleware } from "./midddleware/requestContext.middleware.js";
 
 
 const app = express();
@@ -19,6 +20,7 @@ initializeWorkers();
 initializeCronJobs();
 app.use(i18nextMiddleware.handle(i18n));
 setupSwagger(app);
+app.use(requestContextMiddleware);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/settings", settingsRoutes);

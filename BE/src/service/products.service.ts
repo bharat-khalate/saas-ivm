@@ -1,5 +1,6 @@
 import { Product, User } from "../../generated/prisma/index.js";
 import { prisma } from "../db/dbConfig.js";
+import { notificationLogger } from "../logger/logger.js";
 import { PaginationValues } from "../utils/pagination.helper.js";
 
 export interface CreateProductInput {
@@ -174,9 +175,10 @@ export const listProductsForOrg = async (
  * @returns {Promise<{User,Product}[]>}
  */
 export const getLowStockProducts = async () => {
- const notificationData = await prisma.$queryRaw<
-  ILowStockNotificationData[]
->`
+  notificationLogger.info("Get Low stock service: fetching low stock products with user info")
+  const notificationData = await prisma.$queryRaw<
+    ILowStockNotificationData[]
+  >`
   SELECT 
     JSON_BUILD_OBJECT(
         'userId', u.user_id,
@@ -200,7 +202,7 @@ export const getLowStockProducts = async () => {
     AND p.quantity_on_hand <= COALESCE(p.low_stock_threshold, s.default_low_stock_threshold)
   GROUP BY u.user_id, u.email, u.organisation_name;
 `;
-return notificationData;
+  return notificationData;
 }
 
 /**
