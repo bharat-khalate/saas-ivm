@@ -36,7 +36,7 @@ export function createLogger(fileName: string = "app-info.log", context?: () => 
             level: "info",
             format: combine(
                 injectContext(),
-                timestamp({ format: "yyyy-mm-dd hh:mm:ss.SSS A" }),
+                timestamp({ format: "YYYY-MM-DD hh:mm:ss.SSS A" }),
                 printf((info) => {
                     const {
                         timestamp,
