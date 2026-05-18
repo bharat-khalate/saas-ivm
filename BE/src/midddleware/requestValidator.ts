@@ -1,6 +1,6 @@
 import type { ZodSchema } from "zod";
 import { Request, Response, NextFunction } from "express";
-import { sendError } from "../utils/response.util.js";
+import { requestLogger } from "../logger/logger.js"
 
 type ValidationErrorDetail = {
   field: string;
@@ -15,6 +15,7 @@ type ValidationErrorDetail = {
  */
 export function validateRequest(schema: ZodSchema) {
   return (req: Request, res: Response, next: NextFunction) => {
+    requestLogger.info("validating request");
     const result = schema.safeParse(req.body);
 
     if (!result.success) {
@@ -43,7 +44,7 @@ export function validateRequest(schema: ZodSchema) {
       const messageArray = details.map((d) => `${d.field}: ${req.t(d.message)}`);
 
       // Log a concise validation summary for debugging
-      console.warn("Request validation failed:", {
+      requestLogger.error("Request validation failed:", {
         path: req.originalUrl || req.path,
         method: req.method,
         errors: details,

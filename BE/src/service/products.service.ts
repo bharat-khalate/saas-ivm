@@ -1,5 +1,6 @@
-import { Product } from "../../generated/prisma/index.js";
+import { Product, User } from "../../generated/prisma/index.js";
 import { prisma } from "../db/dbConfig.js";
+import { notificationLogger } from "../logger/logger.js";
 import { PaginationValues } from "../utils/pagination.helper.js";
 
 export interface CreateProductInput {
@@ -16,7 +17,7 @@ export interface CreateProductInput {
   isFeatured: boolean;
   categoryName: string;
   selectedSizes: string[];
-  language?: string; 
+  language?: string;
 }
 
 export interface UpdateProductInput {
@@ -32,8 +33,14 @@ export interface UpdateProductInput {
   isFeatured?: boolean;
   categoryName?: string;
   selectedSizes?: string[];
-  language?: string; 
+  language?: string;
 }
+interface ILowStockProduct extends Omit<Product, "description" | "costPrice" | "sellingPrice" | "fileUrl" | "isActive" | "isFeatured" | "categoryName" | "selectedSizes" | "language"> { }
+interface ILowStockNotificationData {
+  user: Omit<User, "password">;
+  products: ILowStockProduct[]
+}
+
 
 /**
  * Creates a new product record.
@@ -163,9 +170,40 @@ export const listProductsForOrg = async (
     total,
   };
 };
-
-
-
+/**
+ * function that fetches all the low stock products
+ * @returns {Promise<{User,Product}[]>}
+ */
+export const getLowStockProducts = async () => {
+  notificationLogger.info("Get Low stock service: fetching low stock products with user info")
+  const notificationData = await prisma.$queryRaw<
+    ILowStockNotificationData[]
+  >`
+  SELECT 
+    JSON_BUILD_OBJECT(
+        'userId', u.user_id,
+        'email', u.email,
+        'organisationName', u.organisation_name
+    ) AS user,
+    JSON_AGG(
+        JSON_BUILD_OBJECT(
+            'productId', p.product_id,
+            'name', p.name,
+            'sku', p.sku,
+            'quantityOnHand', p.quantity_on_hand,
+            'threshold', COALESCE(p.low_stock_threshold, s.default_low_stock_threshold)
+        )
+    ) AS products
+  FROM products p
+  JOIN users u ON p.organization_id = u.user_id
+  LEFT JOIN settings s ON s.organization_id = p.organization_id
+  WHERE p.is_active = true
+    AND COALESCE(p.low_stock_threshold, s.default_low_stock_threshold) IS NOT NULL
+    AND p.quantity_on_hand <= COALESCE(p.low_stock_threshold, s.default_low_stock_threshold)
+  GROUP BY u.user_id, u.email, u.organisation_name;
+`;
+  return notificationData;
+}
 
 /**
  * Returns paginated products filtered by sku or name.
@@ -200,7 +238,7 @@ export const fetchProductsBySkuOrName = async (
         : false,
     },
   });
- const total = await prisma.product.count({
+  const total = await prisma.product.count({
     where: {
       organizationId,
       OR: [

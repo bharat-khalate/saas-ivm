@@ -9,6 +9,7 @@ import {
 import { signJwt, verifyJwtIgnoreExpiration } from "../utils/jwt.util.js";
 import { hashPassword, comparePassword } from "../utils/password.util.js";
 import { sendSuccess, sendError } from "../utils/response.util.js";
+import { requestLogger } from "../logger/logger.js";
 /**
  * Removes sensitive fields before returning user payloads.
  * @param {any} user - User object that may include sensitive fields.
@@ -29,6 +30,9 @@ const toSafeUser = (user: any) => {
  * @returns {Promise<Response>} JSON response with user and token.
  */
 export const registerUserController = async (req: Request, res: Response) => {
+  requestLogger.info("user controller- sarted user registration", {
+    "request body:": req.body
+  });
   try {
     const { email, password, organisationName } = req.body;
 
@@ -57,8 +61,12 @@ export const registerUserController = async (req: Request, res: Response) => {
       user: toSafeUser(user),
       token,
     });
-  } catch (error) {
-    console.error("registerUserController error", error);
+  } catch (error: any) {
+    requestLogger.error("User Controller- user registration failed", {
+
+      "error": error.message,
+      "trace": error.stack
+    })
     return sendError(res, 500, req.t("common.commonErrorMessage"), req.t("common.commonErrorMessage"));
   }
 };
@@ -70,6 +78,10 @@ export const registerUserController = async (req: Request, res: Response) => {
  * @returns {Promise<Response>} JSON response with user and token.
  */
 export const loginUserController = async (req: Request, res: Response) => {
+  requestLogger.info("user controller- started user login", {
+    "request body:": req.body
+  });
+
   try {
     const { email, password } = req.body;
 
@@ -92,8 +104,11 @@ export const loginUserController = async (req: Request, res: Response) => {
       user: toSafeUser(user),
       token,
     });
-  } catch (error) {
-    console.error("loginUserController error", error);
+  } catch (error: any) {
+    requestLogger.error("User Controller- user login failed", {
+      "error": error.message,
+      "trace": error.stack
+    })
     return sendError(res, 500, req.t("common.commonErrorMessage, error"));
   }
 };
@@ -105,6 +120,8 @@ export const loginUserController = async (req: Request, res: Response) => {
  * @returns {Promise<Response>} JSON response with refreshed token.
  */
 export const refreshTokenController = async (req: Request, res: Response) => {
+  requestLogger.info("user controller- refreshing token");
+
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -119,8 +136,11 @@ export const refreshTokenController = async (req: Request, res: Response) => {
 
     const newToken = signJwt({ userId: payload.userId, email: payload.email });
     return sendSuccess(res, 200, req.t("auth.tokenRefreshed"), { token: newToken });
-  } catch (error) {
-    console.error("refreshTokenController error", error);
+  } catch (error: any) {
+    requestLogger.error("User Controller-  failed to refresh token", {
+      "error": error.message,
+      "trace": error.stack
+    })
     return sendError(res, 500, req.t("common.commonErrorMessage"), req.t("common.commonErrorMessage"));
   }
 };
@@ -132,6 +152,10 @@ export const refreshTokenController = async (req: Request, res: Response) => {
  * @returns {Promise<Response>} JSON response with user data.
  */
 export const getUserByIdController = async (req: Request, res: Response) => {
+  requestLogger.info("user controller- fetching user by id", {
+    "user id:": req.params.id
+  });
+
   try {
     const id = Number(req.params.id);
     if (Number.isNaN(id)) {
@@ -144,8 +168,12 @@ export const getUserByIdController = async (req: Request, res: Response) => {
     }
 
     return sendSuccess(res, 200, req.t("user.fetchSuccess"), toSafeUser(user));
-  } catch (error) {
-    console.error("getUserByIdController error", error);
+  } catch (error: any) {
+    requestLogger.error("User Controller-failed to fetch user by id", {
+      "id": req.params.id,
+      "error": error.message,
+      "trace": error.stack
+    })
     return sendError(res, 500, req.t("common.commonErrorMessage"), req.t("common.commonErrorMessage"));
   }
 };
@@ -157,6 +185,8 @@ export const getUserByIdController = async (req: Request, res: Response) => {
  * @returns {Promise<Response>} JSON response with user list.
  */
 export const listUsersController = async (_req: Request, res: Response) => {
+  requestLogger.info("user controller - fetching list user controller");
+
   try {
     const users = await listUsers();
     return sendSuccess(
@@ -165,8 +195,11 @@ export const listUsersController = async (_req: Request, res: Response) => {
       _req.t("user.fetchSuccess"),
       users.map(toSafeUser),
     );
-  } catch (error) {
-    console.error("listUsersController error", error);
+  } catch (error: any) {
+    requestLogger.error("User Controller- failed to fetch all users", {
+      "error": error.message,
+      "trace": error.stack
+    })
     return sendError(res, 500, _req.t("common.commonErrorMessage"), _req.t("common.commonErrorMessage"));
   }
 };
@@ -178,6 +211,10 @@ export const listUsersController = async (_req: Request, res: Response) => {
  * @returns {Promise<Response>} JSON response confirming deletion.
  */
 export const deleteUserController = async (req: Request, res: Response) => {
+  requestLogger.info("user controller - deleting user ", {
+    "yser id:": req.params.id
+  });
+
   try {
     const id = Number(req.params.id);
     if (Number.isNaN(id)) {
@@ -186,8 +223,11 @@ export const deleteUserController = async (req: Request, res: Response) => {
 
     await deleteUserById(id);
     return sendSuccess(res, 200, req.t("user.userDeleted"), null);
-  } catch (error) {
-    console.error("deleteUserController error", error);
+  } catch (error:any) {
+    requestLogger.error("User Controller- failed to delete user", {
+      "error": error.message,
+      "trace": error.stack
+    })
     return sendError(res, 500, req.t("common.commonErrorMessage"), req.t("common.commonErrorMessage"));
   }
 };

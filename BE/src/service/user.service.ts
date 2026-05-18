@@ -1,4 +1,5 @@
 import { prisma } from "../db/dbConfig.js";
+import { requestLogger } from "../logger/logger.js";
 
 export interface CreateUserInput {
   email: string;
@@ -12,6 +13,9 @@ export interface CreateUserInput {
  * @returns {Promise<import("../../generated/prisma/index.js").User>} Created user.
  */
 export const createUser = async (data: CreateUserInput) => {
+  requestLogger.info("User service- started creating user ind db", {
+    "user data:": data
+  })
   return prisma.user.create({
     data: {
       email: data.email,
@@ -27,6 +31,9 @@ export const createUser = async (data: CreateUserInput) => {
  * @returns {Promise<import("../../generated/prisma/index.js").User | null>} User or null.
  */
 export const getUserByEmail = async (email: string) => {
+  requestLogger.info("User service- started fetching user from db by email", {
+    "user email:": email
+  })
   return prisma.user.findUnique({
     where: { email },
   });
@@ -38,6 +45,9 @@ export const getUserByEmail = async (email: string) => {
  * @returns {Promise<import("../../generated/prisma/index.js").User | null>} User or null.
  */
 export const getUserById = async (userId: number) => {
+  requestLogger.info("User service- started fetching user from db by id", {
+    "user email:": userId
+  })
   return prisma.user.findUnique({
     where: { userId },
   });
@@ -48,6 +58,7 @@ export const getUserById = async (userId: number) => {
  * @returns {Promise<import("../../generated/prisma/index.js").User[]>} User list.
  */
 export const listUsers = async () => {
+  requestLogger.info("User service- started fetching all users from db");
   return prisma.user.findMany();
 };
 
@@ -57,6 +68,9 @@ export const listUsers = async () => {
  * @returns {Promise<import("../../generated/prisma/index.js").User>} Deleted user.
  */
 export const deleteUserById = async (userId: number) => {
+  requestLogger.info("User service- started deleting user from db by id", {
+    "user id:": userId
+  })
   return prisma.user.delete({
     where: { userId },
   });
