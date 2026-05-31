@@ -1,6 +1,6 @@
-# StockFlow
+# SAAS-IVM
 
-StockFlow is a full-stack inventory and stock management application with a React frontend and an Express + Prisma backend.  
+SAAS-IVM is a full-stack inventory and stock management application with a React frontend and an Express + Prisma backend.  
 The project includes multilingual support (frontend i18n + backend l10n), JWT auth with refresh flow, and Prisma migration/seeding support.
 
 ## Tech Stack
@@ -11,7 +11,7 @@ The project includes multilingual support (frontend i18n + backend l10n), JWT au
 ## Project Structure
 
 ```text
-StockFlow/
+SAAS-IVM/
   FE/                 # Frontend (Vite + React)
   BE/                 # Backend API (Express + Prisma)
   package.json        # Root scripts for combined setup/run
@@ -148,7 +148,7 @@ Main route groups:
 
 Health check:
 
-- `GET /` -> `StockFlow API is running`
+- `GET /` -> `SAAS-IVM API is running`
 
 ## API Documentation (Swagger)
 
